@@ -173,7 +173,7 @@ function renderHomePage(data) {
     
     if (data.hero && data.hero.cta) {
         const ctaPage = data.hero.cta.link || 'about';
-        html += `<a href="#" class="btn" data-cta-page="${ctaPage}" style="display: inline-block; margin-top: 2rem; text-decoration: none; color: white;">${data.hero.cta.text || 'Learn More'}</a>`;
+        html += `<a href="#" class="btn btn-glass" data-cta-page="${ctaPage}" style="display: inline-block; margin-top: 2rem; text-decoration: none;">${data.hero.cta.text || 'Learn More'}</a>`;
     }
     
     html += '</section>';
@@ -247,15 +247,15 @@ function renderAboutPage(data) {
     return html;
 }
 
-// Render Experience Page
+// Render Experience Page (timeline layout similar to referenced portfolio)
 function renderExperiencePage(data) {
     let html = '<div class="container">';
     html += '<section class="section">';
     html += `<h1 class="section-title">${data.title || 'Experience'}</h1>`;
     
-    // Work Experience (shown first at the top)
+    // Work Experience timeline (includes "Looking for Work" as first item)
     if (data.work && data.work.length > 0) {
-        html += '<h2 style="margin-top: 2rem; margin-bottom: 1rem; font-size: 2rem; text-align: center;">Work Experience</h2>';
+        html += '<h2 class="experience-subtitle">Work Experience</h2>';
         html += '<div class="experience-timeline">';
         data.work.forEach(exp => {
             html += '<div class="experience-timeline-item">';
@@ -265,21 +265,9 @@ function renderExperiencePage(data) {
         html += '</div>';
     }
     
-    // Looking for work section (shown right after work experience if true)
-    if (data.lookingForWork !== undefined && data.lookingForWork) {
-        html += '<div style="text-align: center; margin-top: 3rem; padding: 2rem; background: var(--bg-light); border-radius: 10px; box-shadow: var(--shadow);">';
-        html += '<h2 style="font-size: 1.5rem; margin-bottom: 1rem; color: var(--primary-color);">Looking for Work</h2>';
-        if (data.lookingForWorkMessage) {
-            html += `<p style="color: var(--text-light); font-size: 1.1rem;">${data.lookingForWorkMessage}</p>`;
-        } else {
-            html += '<p style="color: var(--text-light); font-size: 1.1rem;">I am currently looking for new opportunities and would love to connect!</p>';
-        }
-        html += '</div>';
-    }
-    
-    // Academic Experience (shown last at the bottom)
+    // Education timeline
     if (data.academic && data.academic.length > 0) {
-        html += '<h2 style="margin-top: 3rem; margin-bottom: 1rem; font-size: 2rem; text-align: center;">Education</h2>';
+        html += '<h2 class="experience-subtitle">Education</h2>';
         html += '<div class="experience-timeline">';
         data.academic.forEach(exp => {
             html += '<div class="experience-timeline-item">';
@@ -294,7 +282,7 @@ function renderExperiencePage(data) {
     return html;
 }
 
-// Render Experience Card
+// Render Experience Card (used inside timeline items)
 function renderExperienceCard(exp) {
     let html = '<div class="experience-card">';
     html += `<h3>${exp.title || 'Position'}</h3>`;
