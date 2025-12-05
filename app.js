@@ -452,6 +452,58 @@ async function setupFooter() {
 document.addEventListener('DOMContentLoaded', () => {
     init().then(() => {
         setupFooter();
+        setupCursorBlob();
     });
 });
+
+// Cursor blob effect
+function setupCursorBlob() {
+    const blob = document.getElementById('cursor-blob');
+    if (!blob) return;
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+        blob.classList.add('is-hidden');
+        return;
+    }
+
+    let targetX = window.innerWidth / 2;
+    let targetY = window.innerHeight / 2;
+    let currentX = targetX;
+    let currentY = targetY;
+    const speed = 0.12;
+
+    const setActive = (state) => {
+        if (state) {
+            blob.classList.add('is-active');
+            blob.classList.remove('is-hidden');
+        } else {
+            blob.classList.remove('is-active');
+            blob.classList.add('is-hidden');
+        }
+    };
+
+    const animate = () => {
+        currentX += (targetX - currentX) * speed;
+        currentY += (targetY - currentY) * speed;
+        blob.style.transform = `translate3d(${currentX - 90}px, ${currentY - 90}px, 0)`;
+        requestAnimationFrame(animate);
+    };
+
+    const handleMove = (e) => {
+        targetX = e.clientX;
+        targetY = e.clientY;
+        setActive(true);
+    };
+
+    const handleLeave = () => setActive(false);
+
+    window.addEventListener('mousemove', handleMove);
+    window.addEventListener('mouseleave', handleLeave);
+
+    // Hide on touch devices
+    window.addEventListener('touchstart', () => setActive(false), { once: true });
+
+    animate();
+}
 

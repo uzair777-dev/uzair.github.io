@@ -24,6 +24,31 @@ body {
     line-height: 1.6;
 }
 
+/* Cursor blob */
+#cursor-blob {
+    position: fixed;
+    width: 180px;
+    height: 180px;
+    top: 0;
+    left: 0;
+    border-radius: 50%;
+    pointer-events: none;
+    background: radial-gradient(circle at 30% 30%, rgba(99, 102, 241, 0.35), rgba(139, 92, 246, 0.25));
+    filter: blur(35px);
+    mix-blend-mode: multiply;
+    opacity: 0;
+    transition: opacity 0.25s ease, transform 0.25s ease;
+    z-index: 0;
+}
+
+#cursor-blob.is-active {
+    opacity: 0.8;
+}
+
+#cursor-blob.is-hidden {
+    opacity: 0;
+}
+
 /* Navigation */
 .navbar {
     background: rgba(255, 255, 255, 0.65);
@@ -219,7 +244,7 @@ body {
 .experience-timeline-item::before {
     content: '';
     position: absolute;
-    left: -0.1rem;
+    left: -2.24rem;
     top: 0.9rem;
     width: 14px;
     height: 14px;
