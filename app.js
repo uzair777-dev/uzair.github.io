@@ -4,6 +4,7 @@ let currentPage = 'home';
 
 // Initialize the application
 async function init() {
+    showPreloader();
     try {
         // Load global configuration
         globalConfig = await loadJSON('data/global.json');
@@ -24,6 +25,9 @@ async function init() {
         console.error('Error initializing app:', error);
         document.getElementById('main-content').innerHTML = 
             '<div class="loading"><p>Error loading content. Please check your data files.</p></div>';
+        hidePreloader();
+    } finally {
+        hidePreloader();
     }
 }
 
@@ -499,9 +503,190 @@ function setupThemeToggle() {
     });
 }
 
-// Initialize when DOM is loaded
-document.addEventListener('DOMContentLoaded', () => {
-    init().then(() => {
-        setupFooter();
+// Preloader functions
+function showPreloader() {
+    let preloader = document.getElementById('preloader');
+    if (!preloader) {
+        preloader = document.createElement('div');
+        preloader.id = 'preloader';
+        preloader.style.position = 'fixed';
+        preloader.style.top = '0';
+        preloader.style.left = '0';
+        preloader.style.width = '100%';
+        preloader.style.height = '100%';
+        preloader.style.backgroundColor = 'var(--bg-primary)';
+        preloader.style.display = 'flex';
+        preloader.style.justifyContent = 'center';
+        preloader.style.alignItems = 'center';
+        preloader.style.zIndex = '9999';
+        
+        if (!document.getElementById('preloader-styles')) {
+            const style = document.createElement('style');
+            style.id = 'preloader-styles';
+            style.textContent = `
+                @keyframes spin {
+                    0% { transform: rotate(0deg); }
+                    100% { transform: rotate(360deg); }
+                }
+                @keyframes pulse {
+                    0%, 100% { opacity: 0.3; transform: scale(0.8); }
+                    50% { opacity: 1; transform: scale(1); }
+                }
+                @keyframes bounce {
+                    0%, 80%, 100% { transform: translateY(0); }
+                    40% { transform: translateY(-10px); }
+                }
+            `;
+            document.head.appendChild(style);
+        }
+
+        const preloaderContent = document.createElement('div');
+        preloaderContent.style.textAlign = 'center';
+
+        const spinner = document.createElement('div');
+        spinner.style.border = '4px solid rgba(255, 255, 255, 0.3)';
+        spinner.style.borderRadius = '50%';
+        spinner.style.borderTop = '4px solid var(--primary)';
+        spinner.style.width = '40px';
+        spinner.style.height = '40px';
+        
+        // Use custom animation from config or default to 'spin'
+        const animation = globalConfig.preloader?.customAnimation || 'spin';
+        const duration = (globalConfig.preloader?.duration || 2000) / 1000;
+        spinner.style.animation = `${animation} ${duration}s linear infinite`;
+        
+        // Add animationend event to hide preloader when animation completes
+        spinner.addEventListener('animationend', () => {
+            const preloader = document.getElementById('preloader');
+            if (preloader) {
+                preloader.style.display = 'none';
+            }
+        });
+
+        const text = document.createElement('div');
+        text.textContent = 'Loading...';
+        text.style.marginTop = '1rem';
+        text.style.color = 'var(--text-primary)';
+
+        preloaderContent.appendChild(spinner);
+        preloaderContent.appendChild(text);
+        preloader.appendChild(preloaderContent);
+        document.body.appendChild(preloader);
+    }
+    preloader.style.display = 'flex';
+}
+
+function hidePreloader() {
+    const preloader = document.getElementById('preloader');
+    if (preloader) {
+        preloader.style.display = 'none';
+    }
+}
+
+// Preload assets
+async function preloadAssets() {
+    if (!globalConfig.preloader?.enabled) {
+        return;
+    }
+    
+    const assets = [];
+    
+    // Preload images from pages
+    const pageFiles = ['home', 'about', 'experience', 'contact'];
+    for (const page of pageFiles) {
+        try {
+            const pageData = await loadJSON(`data/pages/${page}.json`);
+            if (pageData.hero?.image) {
+                assets.push(pageData.hero.image);
+            }
+            if (pageData.image) {
+                assets.push(pageData.image);
+            }
+            if (pageData.work) {
+                pageData.work.forEach(exp => {
+                    if (exp.image) assets.push(exp.image);
+                });
+            }
+            if (pageData.academic) {
+                pageData.academic.forEach(exp => {
+                    if (exp.image) assets.push(exp.image);
+                });
+            }
+        } catch (error) {
+            console.warn(`Could not preload assets for ${page}:`, error);
+        }
+    }
+    
+    // Preload other assets
+    assets.push('styles.css');
+    assets.push('app.js');
+    
+    // Load assets
+    const promises = assets.map(asset => {
+        return new Promise((resolve, reject) => {
+            if (asset.endsWith('.css')) {
+                const link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = asset;
+                link.onload = resolve;
+                link.onerror = reject;
+                document.head.appendChild(link);
+            } else if (asset.endsWith('.js')) {
+                const script = document.createElement('script');
+                script.src = asset;
+                script.onload = resolve;
+                script.onerror = reject;
+                document.head.appendChild(script);
+            } else {
+                const img = new Image();
+                img.onload = resolve;
+                img.onerror = reject;
+                img.src = asset;
+            }
+        });
     });
+    
+    await Promise.allSettled(promises);
+}
+
+// Initialize when DOM is loaded
+document.addEventListener('DOMContentLoaded', async () => {
+    window.__preloaderStartTime = performance.now();
+    showPreloader();
+    try {
+        // Preload assets first
+        await preloadAssets();
+        
+        // Load global configuration
+        globalConfig = await loadJSON('data/global.json');
+        
+        // Set up navigation
+        setupNavigation();
+        
+        // Load initial page
+        loadPage('home');
+        
+        // Set up mobile menu toggle
+        setupMobileMenu();
+        
+        // Set up theme toggle
+        setupThemeToggle();
+        setTheme(getPreferredTheme());
+        
+        // Setup footer
+        await setupFooter();
+    } catch (error) {
+        console.error('Error initializing app:', error);
+        document.getElementById('main-content').innerHTML = 
+            '<div class="loading"><p>Error loading content. Please check your data files.</p></div>';
+    } finally {
+        // Ensure preloader is hidden after minimum duration
+        const minDuration = globalConfig.preloader?.duration || 2000;
+        const elapsed = performance.now() - window.__preloaderStartTime;
+        const remaining = Math.max(0, minDuration - elapsed);
+        
+        setTimeout(() => {
+            hidePreloader();
+        }, remaining);
+    }
 });

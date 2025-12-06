@@ -47,6 +47,10 @@
   "theme": {
     "primaryColor": "#6366f1",
     "secondaryColor": "#8b5cf6"
+  },
+  "preloader": {
+    "enabled": true,
+    "duration": 2000,
+    "customAnimation": "spin"
   }
 }
-
