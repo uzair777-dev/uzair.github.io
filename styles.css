@@ -13,8 +13,8 @@
     --bg-color: #f9fafb;
     --bg-light: #ffffff;
     --border-color: #e5e7eb;
-    --shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-    --shadow-lg: 0 18px 45px rgba(0, 0, 0, 0.15);
+    --shadow: 13px -6px 32px rgba(121, 133, 235, 1);
+    --shadow-lg: 0 18px 32px rgba(0, 0, 0, 0.15);
     --glow: 0 0 20px rgba(99, 102, 241, 0.15);
     --glow-strong: 0 0 32px rgba(99, 102, 241, 0.2);
 }
@@ -27,10 +27,10 @@
     --bg-color: #111827;
     --bg-light: #1f2937;
     --border-color: #d1d2d4;
-    --shadow: 0 12px 32px rgba(179, 164, 164, 0.3);
-    --shadow-lg: 0 18px 45px rgba(179, 164, 164, 0.4);
+    --shadow: 13px -6px 32px rgba(121, 133, 235, 1);
+    --shadow-lg: 0px 0px 28px -1px rgb(89 96 205);
     --glow: 0 0 20px rgba(129, 140, 248, 0.15);
-    --glow-strong: 0 0 32px rgba(129, 140, 248, 0.2);
+    --glow-strong: 0 0 32px rgba(129, 141, 248, 0.322);
 }
 
 /* Theme toggle styles */
@@ -89,12 +89,12 @@ body {
 .experience-card, 
 .contact-form {
     background: var(--bg-color) !important;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+    box-shadow: var(--shadow-lg) !important;
 }
 
 .skill-item:hover, 
 .experience-card:hover {
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15) !important;
+    box-shadow: var(--shadow-lg) !important;
 }
 
 .experience-card .company,
@@ -456,7 +456,7 @@ h1, h2, h3, h4, h5, h6 {
     background: rgba(255, 255, 255, 0.12);
     color: var(--text-color);
     border: 1px solid rgba(255, 255, 255, 0.3);
-    box-shadow: 0 8px 32px rgba(31, 38, 135, 0.15);
+    box-shadow: 0px 0px 32px 10px rgba(31, 38, 135, 0.15);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease, background 0.3s ease;
