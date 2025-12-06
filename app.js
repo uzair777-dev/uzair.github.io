@@ -514,7 +514,7 @@ function showPreloader() {
         preloader.style.left = '0';
         preloader.style.width = '100%';
         preloader.style.height = '100%';
-        preloader.style.backgroundColor = 'var(--bg-primary)';
+        preloader.style.backgroundColor = 'var(--preloader-bg)';
         preloader.style.display = 'flex';
         preloader.style.justifyContent = 'center';
         preloader.style.alignItems = 'center';
