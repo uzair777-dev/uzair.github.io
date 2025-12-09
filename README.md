@@ -47,12 +47,12 @@ Truthfully, I am too lazy to update stuff everytime it is done, so i made it thi
 - [x] Make shi look presentable (hopefully)
 - [x] Do styling
 - [x] Make styling better 
-- [] Unf\*ck styling 
-- [] Add resume 
-- [] Make it so that I can download resume
-- [] Link my socials
-- [] Add Notes for the subjects 
-- [] Make stuff Look good
-- [] Optimise it
-- [] Optimise it again
+- [ ] Unf\*ck styling 
+- [ ] Add resume 
+- [ ] Make it so that I can download resume
+- [ ] Link my socials
+- [ ] Add Notes for the subjects 
+- [ ] Make stuff Look good
+- [ ] Optimise it
+- [ ] Optimise it again
 - [x] Document everything properly 
