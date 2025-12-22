@@ -143,6 +143,9 @@ function renderPage(pageData) {
         case 'contact':
             html = renderContactPage(pageData);
             break;
+        case 'resources':
+            html = renderResourcesPage(pageData);
+            break;
         default:
             html = renderGenericPage(pageData);
     }
@@ -153,7 +156,10 @@ function renderPage(pageData) {
     if (pageData.type === 'contact') {
         setupContactForm();
     }
-    
+    if (pageData.type === 'resources') {
+        setupResourceButtons();
+    }
+
     // Setup CTA buttons
     setupCTAButtons();
 }
@@ -376,13 +382,61 @@ function renderContactPage(data) {
     return html;
 }
 
+// Render Resources Page
+function renderResourcesPage(data) {
+    let html = '<div class="container">';
+    html += '<section class="section">';
+    html += `<h1 class="section-title">${data.title || 'Resources'}</h1>`;
+    html += '<div class="section-content">';
+
+    if (data.description) {
+        html += `<p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">${data.description}</p>`;
+    }
+
+    // Semester buttons vertical layout
+    if (data.folders && data.folders.length > 0) {
+        html += '<div class="resources-vertical" style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; max-width: 600px; margin-left: auto; margin-right: auto;">';
+
+        data.folders.forEach(folder => {
+            // Extract folder ID from Google Drive link
+            const folderId = extractGoogleDriveFolderId(folder.link);
+            const iframeId = `resources-iframe-${folder.sem}`;
+
+            html += '<div class="resource-item" style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
+            html += `<h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--primary-color);">${folder.text}</h3>`;
+            html += `<button class="btn btn-resource" data-folder-id="${folderId}" style="width: 100%; padding: 0.75rem; background: var(--primary); color: var(--text-color); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">`;
+            html += `View ${folder.text} Resources`;
+            html += '</button>';
+            html += '</div>';
+        });
+
+        html += '</div>';
+    }
+
+    html += '</div>';
+    html += '</section>';
+    html += '</div>';
+    return html;
+}
+
+// Helper function to extract Google Drive folder ID from URL
+function extractGoogleDriveFolderId(url) {
+    try {
+        const match = url.match(/[-\w]{25,}/);
+        return match ? match[0] : '';
+    } catch (error) {
+        console.error('Error extracting folder ID:', error);
+        return '';
+    }
+}
+
 // Render Generic Page
 function renderGenericPage(data) {
     let html = '<div class="container">';
     html += '<section class="section">';
     html += `<h1 class="section-title">${data.title || 'Page'}</h1>`;
     html += '<div class="section-content">';
-    
+
     if (data.content) {
         if (Array.isArray(data.content)) {
             data.content.forEach(item => {
@@ -396,7 +450,7 @@ function renderGenericPage(data) {
             html += `<p>${data.content}</p>`;
         }
     }
-    
+
     html += '</div>';
     html += '</section>';
     html += '</div>';
@@ -431,6 +485,142 @@ function setupContactForm() {
             form.reset();
         });
     }
+}
+
+// Setup Resource Buttons
+function setupResourceButtons() {
+    const resourceButtons = document.querySelectorAll('.btn-resource');
+    let currentPopup = null;
+
+    resourceButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.preventDefault();
+            const folderId = button.getAttribute('data-folder-id');
+            const semesterText = button.textContent.replace('View ', '').replace('Hide ', '').replace(' Resources', '');
+
+            // Close any existing popup
+            if (currentPopup) {
+                currentPopup.remove();
+                currentPopup = null;
+            }
+
+            // Create exclusive popup iframe
+            currentPopup = document.createElement('div');
+            currentPopup.id = 'exclusive-resource-popup';
+            currentPopup.style.position = 'fixed';
+            currentPopup.style.top = '0';
+            currentPopup.style.left = '0';
+            currentPopup.style.width = '100%';
+            currentPopup.style.height = '100%';
+            currentPopup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+            currentPopup.style.zIndex = '9999';
+            currentPopup.style.display = 'flex';
+            currentPopup.style.justifyContent = 'center';
+            currentPopup.style.alignItems = 'center';
+            currentPopup.style.flexDirection = 'column';
+
+            // Create popup content container
+            const popupContent = document.createElement('div');
+            popupContent.style.backgroundColor = 'var(--bg-primary)';
+            popupContent.style.padding = '2rem';
+            popupContent.style.borderRadius = '8px';
+            popupContent.style.width = '90%';
+            popupContent.style.maxWidth = '1200px';
+            popupContent.style.height = '80%';
+            popupContent.style.maxHeight = '90vh';
+            popupContent.style.position = 'relative';
+            popupContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+
+            // Create close button
+            const closeButton = document.createElement('button');
+            closeButton.textContent = '×';
+            closeButton.style.position = 'absolute';
+            closeButton.style.top = '10px';
+            closeButton.style.right = '10px';
+            closeButton.style.background = 'var(--primary)';
+            closeButton.style.color = 'white';
+            closeButton.style.border = 'none';
+            closeButton.style.borderRadius = '50%';
+            closeButton.style.width = '30px';
+            closeButton.style.height = '30px';
+            closeButton.style.cursor = 'pointer';
+            closeButton.style.fontSize = '18px';
+            closeButton.style.zIndex = '10000';
+
+            closeButton.addEventListener('click', () => {
+                currentPopup.remove();
+                currentPopup = null;
+            });
+
+            // Create title
+            const popupTitle = document.createElement('h2');
+            popupTitle.textContent = `${semesterText} Resources`;
+            popupTitle.style.marginTop = '0';
+            popupTitle.style.color = 'var(--primary)';
+            popupTitle.style.textAlign = 'center';
+
+            // Create iframe container with sandbox attributes to prevent navigation
+            const iframeContainer = document.createElement('div');
+            iframeContainer.style.width = '100%';
+            iframeContainer.style.height = 'calc(100% - 80px)';
+            iframeContainer.style.marginTop = '1rem';
+            iframeContainer.style.border = '1px solid var(--border-color)';
+            iframeContainer.style.borderRadius = '4px';
+            iframeContainer.style.overflow = 'hidden';
+
+            // Create iframe without sandboxing for full Google Drive functionality
+            const iframe = document.createElement('iframe');
+            iframe.src = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
+            iframe.style.width = '100%';
+            iframe.style.height = '100%';
+            iframe.style.border = 'none';
+            iframe.allow = 'fullscreen; clipboard-read; clipboard-write';
+            // Remove sandbox attribute completely to allow Google Drive to function properly
+            iframe.referrerPolicy = 'strict-origin-when-cross-origin';
+
+            // Add load event listener for better user experience
+            iframe.addEventListener('load', function() {
+                console.log('Google Drive iframe loaded successfully');
+            });
+
+            iframe.addEventListener('error', function() {
+                console.error('Error loading Google Drive iframe');
+                // Show user-friendly error message
+                iframeContainer.innerHTML = `
+                    <div style="padding: 2rem; text-align: center; color: var(--text-primary);">
+                        <h3>Unable to load Google Drive content</h3>
+                        <p>There was an error loading the resources. Please try again later.</p>
+                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 1rem;">
+                            If this issue persists, you may need to check your browser settings or try a different browser.
+                        </p>
+                        <button style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;"
+                                onclick="window.open('https://drive.google.com/drive/folders/${folderId}', '_blank')">
+                            Open in Google Drive
+                        </button>
+                    </div>
+                `;
+            });
+
+            iframeContainer.appendChild(iframe);
+
+            // Assemble popup
+            popupContent.appendChild(closeButton);
+            popupContent.appendChild(popupTitle);
+            popupContent.appendChild(iframeContainer);
+            currentPopup.appendChild(popupContent);
+
+            // Add click outside to close
+            currentPopup.addEventListener('click', (e) => {
+                if (e.target === currentPopup) {
+                    currentPopup.remove();
+                    currentPopup = null;
+                }
+            });
+
+            // Add to body
+            document.body.appendChild(currentPopup);
+        });
+    });
 }
 
 // Setup Footer

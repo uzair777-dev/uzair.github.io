@@ -21,6 +21,10 @@
       {
         "label": "Contact",
         "page": "contact"
+      },
+      {
+        "label": "Resources",
+        "page": "resources"
       }
     ]
   },

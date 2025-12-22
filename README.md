@@ -34,7 +34,7 @@ These are the following roles for the files
 
 How shi works:
 
-Basically when the page loads it runs the app.js and it dynamically places content from the various jsons to dynamically adjust the content. 
+Basically when the page loads it runs the `app.js` and it dynamically places content from the various jsons and dynamically adjust the content. It basically does the heavy lifting of procedurally adding code and removing in response to user interaction and resouces (.jons) updateing in source
 
 Truthfully, I am too lazy to update stuff everytime it is done, so i made it this way so it won't be a pain in the a*@h°le everytime
 
