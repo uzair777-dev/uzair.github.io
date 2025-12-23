@@ -481,7 +481,7 @@ function setupContactForm() {
             
             // In a real application, you would send this to a server
             // For now, we'll just show an alert
-            alert('Thank you for your message! (This is a demo - form submission is not configured)');
+            alert('Thank you for your message! (This is a stub form submission is not configured, imma do it later, hopefully)');
             form.reset();
         });
     }
@@ -518,7 +518,7 @@ function setupResourceButtons() {
             currentPopup.style.justifyContent = 'center';
             currentPopup.style.alignItems = 'center';
             currentPopup.style.flexDirection = 'column';
-            currentPopup.style.backgroundColor= "var(--bg-light)"
+            currentPopup.style.backgroundColor= "var(--popup-color)"
 
             // Create popup content container
             const popupContent = document.createElement('div');
@@ -538,8 +538,8 @@ function setupResourceButtons() {
             closeButton.style.position = 'absolute';
             closeButton.style.top = '10px';
             closeButton.style.right = '10px';
-            closeButton.style.background = 'var(--primary)';
-            closeButton.style.color = 'white';
+            closeButton.style.background = 'var(--pop-upcolor)';
+            closeButton.style.color = 'var(--popup-text-color)';
             closeButton.style.border = 'none';
             closeButton.style.borderRadius = '50%';
             closeButton.style.width = '30px';
@@ -557,7 +557,7 @@ function setupResourceButtons() {
             const popupTitle = document.createElement('h2');
             popupTitle.textContent = `${semesterText} Resources`;
             popupTitle.style.marginTop = '0';
-            popupTitle.style.color = 'var(--primary)';
+            popupTitle.style.color = 'var(--popup-text-color)';
             popupTitle.style.textAlign = 'center';
 
             // Create iframe container with sandbox attributes to prevent navigation
@@ -565,7 +565,7 @@ function setupResourceButtons() {
             iframeContainer.style.width = '100%';
             iframeContainer.style.height = 'calc(100% - 80px)';
             iframeContainer.style.marginTop = '1rem';
-            iframeContainer.style.border = '1px solid var(--border-color)';
+            iframeContainer.style.border = '1px solid var(--shadow-lg)';
             iframeContainer.style.borderRadius = '4px';
             iframeContainer.style.overflow = 'hidden';
 
@@ -617,6 +617,8 @@ function setupResourceButtons() {
                     currentPopup = null;
                 }
             });
+            //On god, ye na hora mujse 
+            // document.getElementsByClassName('flip-entry-title').style.color = "var('--text-color')";
 
             // Add to body
             document.body.appendChild(currentPopup);

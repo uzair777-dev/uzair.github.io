@@ -18,12 +18,14 @@
     --glow: 0 0 20px rgba(99, 102, 241, 0.15);
     --glow-strong: 0 0 32px rgba(99, 102, 241, 0.2);
     --preloader-bg: rgb(255, 255, 255);
+    --popup-color : #f7f7f7;
+    --popup-text-color : #111827;
 }
 
 [data-theme="dark"] {
     --primary-color: #818cf8;
     --secondary-color: #a78bfa;
-    --text-color: #e5e7eb;
+    --text-color: #f7f8fa;
     --text-light: #9ca3af;
     --bg-color: #111827;
     --bg-light: #1f2937;
@@ -33,6 +35,9 @@
     --glow: 0 0 20px rgba(129, 140, 248, 0.15);
     --glow-strong: 0 0 32px rgba(129, 141, 248, 0.322);
     --preloader-bg: rgb(100, 128, 206);
+    --popup-color : #f7f7f7;
+    --popup-text-color : #111827;
+
 }
 
 /* Theme toggle styles */
@@ -111,7 +116,7 @@ body {
 
 /* Improve contrast for light mode */
 h1, h2, h3, h4, h5, h6 {
-    color: var(--text-color) !important;
+    color: var(--text-color);
 }
 
 /* Navigation */
