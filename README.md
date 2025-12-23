@@ -1,4 +1,4 @@
-# [uzair777-dev.github.io](http://uzair777-dev.github.io)
+# [uzair777-dev.github.io](http://uzairshaikh.pages.dev)
 
 This is my portfolio website source code.
 
@@ -57,3 +57,6 @@ Truthfully, I am too lazy to update stuff everytime it is done, so i made it thi
 - [ ] Optimise it again
 - [x] Document everything properly 
 - [ ] Add a Cloudflare proxy
+
+
+[Backup link](https://uzair777-dev.github.io)
