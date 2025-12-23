@@ -125,23 +125,23 @@ function updateActiveNavLink(pageName) {
 }
 
 // Render page content
-function renderPage(pageData) {
+async function renderPage(pageData) {
     const mainContent = document.getElementById('main-content');
     let html = '';
-    
+
     // Render based on page type
     switch (pageData.type) {
         case 'home':
-            html = renderHomePage(pageData);
+            html = await renderHomePage(pageData);
             break;
         case 'about':
-            html = renderAboutPage(pageData);
+            html = await renderAboutPage(pageData);
             break;
         case 'experience':
             html = renderExperiencePage(pageData);
             break;
         case 'contact':
-            html = renderContactPage(pageData);
+            html = await renderContactPage(pageData);
             break;
         case 'resources':
             html = renderResourcesPage(pageData);
@@ -149,9 +149,9 @@ function renderPage(pageData) {
         default:
             html = renderGenericPage(pageData);
     }
-    
+
     mainContent.innerHTML = html;
-    
+
     // Setup page-specific interactions
     if (pageData.type === 'contact') {
         setupContactForm();
@@ -165,68 +165,90 @@ function renderPage(pageData) {
 }
 
 // Render Home Page
-function renderHomePage(data) {
+async function renderHomePage(data) {
     let html = '<div class="container">';
     html += '<section class="hero">';
-    
+
     if (data.hero && data.hero.image) {
         html += `<img src="${data.hero.image}" alt="${data.hero.name || 'Profile'}" class="hero-image">`;
     }
-    
+
     if (data.hero && data.hero.name) {
         html += `<h1>${data.hero.name}</h1>`;
     }
-    
+
     if (data.hero && data.hero.title) {
         html += `<p>${data.hero.title}</p>`;
     }
-    
+
     if (data.hero && data.hero.description) {
         html += `<p style="max-width: 600px; margin: 0 auto;">${data.hero.description}</p>`;
     }
-    
+
     if (data.hero && data.hero.cta) {
         const ctaPage = data.hero.cta.link || 'about';
         html += `<a href="#" class="btn btn-glass" data-cta-page="${ctaPage}" style="display: inline-block; margin-top: 2rem; text-decoration: none;">${data.hero.cta.text || 'Learn More'}</a>`;
     }
-    
+
     html += '</section>';
-    
+
     // Featured skills or projects
     if (data.featured && data.featured.length > 0) {
         html += '<section class="section">';
         html += '<h2 class="section-title">Featured</h2>';
         html += '<div class="skills-grid">';
-        data.featured.forEach(item => {
+        for (const item of data.featured) {
             html += `<div class="skill-item">`;
             if (item.icon) {
-                html += `<div style="font-size: 2rem; margin-bottom: 0.5rem;">${item.icon}</div>`;
+                const iconContent = await renderSVGIcon(item.icon);
+                html += `<div class="svg-icon">${iconContent}</div>`;
             }
             html += `<h4>${item.title}</h4>`;
             if (item.description) {
                 html += `<p style="font-size: 0.9rem; color: var(--text-light);">${item.description}</p>`;
             }
             html += `</div>`;
-        });
+        }
         html += '</div>';
         html += '</section>';
     }
-    
+
     html += '</div>';
     return html;
 }
 
+// Helper function to render SVG icons
+async function renderSVGIcon(iconPath) {
+    if (!iconPath || typeof iconPath !== 'string') return '';
+
+    try {
+        // Check if it's a path to an SVG file
+        if (iconPath.startsWith('res/svg/') && iconPath.endsWith('.svg')) {
+            const response = await fetch(iconPath);
+            if (response.ok) {
+                const svgContent = await response.text();
+                return svgContent;
+            }
+        }
+        // If not a valid SVG path, return the original content (could be an emoji)
+        return iconPath;
+    } catch (error) {
+        console.error('Error loading SVG icon:', error);
+        return iconPath;
+    }
+}
+
 // Render About Page
-function renderAboutPage(data) {
+async function renderAboutPage(data) {
     let html = '<div class="container">';
     html += '<section class="section">';
     html += `<h1 class="section-title">${data.title || 'About'}</h1>`;
     html += '<div class="section-content">';
-    
+
     if (data.image) {
         html += `<img src="${data.image}" alt="About" class="about-image">`;
     }
-    
+
     if (data.content) {
         if (Array.isArray(data.content)) {
             data.content.forEach(paragraph => {
@@ -236,25 +258,26 @@ function renderAboutPage(data) {
             html += `<p class="about-content">${data.content}</p>`;
         }
     }
-    
+
     // Skills section
     if (data.skills && data.skills.length > 0) {
         html += '<h2 style="margin-top: 3rem; margin-bottom: 1.5rem;">Skills</h2>';
         html += '<div class="skills-grid">';
-        data.skills.forEach(skill => {
+        for (const skill of data.skills) {
             html += `<div class="skill-item">`;
             if (skill.icon) {
-                html += `<div style="font-size: 2rem; margin-bottom: 0.5rem;">${skill.icon}</div>`;
+                const iconContent = await renderSVGIcon(skill.icon);
+                html += `<div class="svg-icon">${iconContent}</div>`;
             }
             html += `<h4>${skill.name}</h4>`;
             if (skill.level) {
                 html += `<p style="font-size: 0.9rem; color: var(--text-light);">${skill.level}</p>`;
             }
             html += `</div>`;
-        });
+        }
         html += '</div>';
     }
-    
+
     html += '</div>';
     html += '</section>';
     html += '</div>';
@@ -337,19 +360,19 @@ function renderExperienceCard(exp) {
 }
 
 // Render Contact Page
-function renderContactPage(data) {
+async function renderContactPage(data) {
     let html = '<div class="container">';
     html += '<section class="section">';
     html += `<h1 class="section-title">${data.title || 'Contact'}</h1>`;
     html += '<div class="section-content">';
-    
+
     if (data.description) {
         html += `<p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">${data.description}</p>`;
     }
-    
+
     html += '<div class="contact-form">';
     html += '<form id="contact-form">';
-    
+
     if (data.form && data.form.fields) {
         data.form.fields.forEach(field => {
             html += '<div class="form-group">';
@@ -362,20 +385,21 @@ function renderContactPage(data) {
             html += '</div>';
         });
     }
-    
+
     html += '<button type="submit" class="btn">Send Message</button>';
     html += '</form>';
     html += '</div>';
-    
+
     // Social links
     if (data.social && data.social.length > 0) {
         html += '<div class="social-links">';
-        data.social.forEach(link => {
-            html += `<a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.name}">${link.icon || link.name}</a>`;
-        });
+        for (const link of data.social) {
+            const iconContent = await renderSVGIcon(link.icon);
+            html += `<a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.name}" class="svg-icon">${iconContent}</a>`;
+        }
         html += '</div>';
     }
-    
+
     html += '</div>';
     html += '</section>';
     html += '</div>';
@@ -637,9 +661,10 @@ async function setupFooter() {
             }
             if (globalConfig.footer.links && globalConfig.footer.links.length > 0) {
                 footerHTML += '<div class="social-links">';
-                globalConfig.footer.links.forEach(link => {
-                    footerHTML += `<a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.name}">${link.icon || link.name}</a>`;
-                });
+                for (const link of globalConfig.footer.links) {
+                    const iconContent = await renderSVGIcon(link.icon);
+                    footerHTML += `<a href="${link.url}" target="_blank" rel="noopener noreferrer" title="${link.name}" class="svg-icon">${iconContent}</a>`;
+                }
                 footerHTML += '</div>';
             }
             footer.innerHTML = footerHTML += "<br>PS: This whole website is genrated on the spot using various clever techniques. 😜 <br> Visit the Github repo for more info.";

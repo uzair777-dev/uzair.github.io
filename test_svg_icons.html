@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SVG Icon Test</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .test-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .test-item {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        .test-item h3 {
+            margin-top: 10px;
+            font-size: 1rem;
+            color: #333;
+        }
+        .test-item p {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <h1>SVG Icon Test</h1>
+    <p>Testing SVG icons that replaced emojis in the portfolio website</p>
+
+    <div class="test-container">
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <!-- Linux SVG will be loaded here -->
+                <object data="res/svg/Linux.svg" type="image/svg+xml" class="svg-content">
+                    Linux SVG
+                </object>
+            </div>
+            <h3>Linux</h3>
+            <p>res/svg/Linux.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/Cloud.svg" type="image/svg+xml" class="svg-content">
+                    Cloud SVG
+                </object>
+            </div>
+            <h3>Cloud</h3>
+            <p>res/svg/Cloud.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/pen-testing.svg" type="image/svg+xml" class="svg-content">
+                    Pen Testing SVG
+                </object>
+            </div>
+            <h3>Pen Testing</h3>
+            <p>res/svg/pen-testing.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/python.svg" type="image/svg+xml" class="svg-content">
+                    Python SVG
+                </object>
+            </div>
+            <h3>Python</h3>
+            <p>res/svg/python.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/sql.svg" type="image/svg+xml" class="svg-content">
+                    SQL SVG
+                </object>
+            </div>
+            <h3>SQL</h3>
+            <p>res/svg/sql.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/bash.svg" type="image/svg+xml" class="svg-content">
+                    Bash SVG
+                </object>
+            </div>
+            <h3>Bash</h3>
+            <p>res/svg/bash.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/aws.svg" type="image/svg+xml" class="svg-content">
+                    AWS SVG
+                </object>
+            </div>
+            <h3>AWS</h3>
+            <p>res/svg/aws.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/git.svg" type="image/svg+xml" class="svg-content">
+                    Git SVG
+                </object>
+            </div>
+            <h3>Git</h3>
+            <p>res/svg/git.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/windows.svg" type="image/svg+xml" class="svg-content">
+                    Windows SVG
+                </object>
+            </div>
+            <h3>Windows</h3>
+            <p>res/svg/windows.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/network.svg" type="image/svg+xml" class="svg-content">
+                    Network SVG
+                </object>
+            </div>
+            <h3>Network</h3>
+            <p>res/svg/network.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/email.svg" type="image/svg+xml" class="svg-content">
+                    Email SVG
+                </object>
+            </div>
+            <h3>Email</h3>
+            <p>res/svg/email.svg</p>
+        </div>
+
+        <div class="test-item">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/github.svg" type="image/svg+xml" class="svg-content">
+                    GitHub SVG
+                </object>
+            </div>
+            <h3>GitHub</h3>
+            <p>res/svg/github.svg</p>
+        </div>
+    </div>
+
+    <h2 style="margin-top: 40px;">Size Variations Test</h2>
+    <div style="display: flex; align-items: center; gap: 20px; flex-wrap: wrap; margin-top: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="svg-icon svg-sm">
+                <object data="res/svg/Linux.svg" type="image/svg+xml" style="width: 100%; height: 100%;">
+                    Small
+                </object>
+            </div>
+            <span>.svg-sm</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="svg-icon svg-md">
+                <object data="res/svg/Linux.svg" type="image/svg+xml" style="width: 100%; height: 100%;">
+                    Medium
+                </object>
+            </div>
+            <span>.svg-md</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="svg-icon svg-lg">
+                <object data="res/svg/Linux.svg" type="image/svg+xml" style="width: 100%; height: 100%;">
+                    Large
+                </object>
+            </div>
+            <span>.svg-lg</span>
+        </div>
+
+        <div style="display: flex; flex-direction: column; align-items: center;">
+            <div class="svg-icon svg-xl">
+                <object data="res/svg/Linux.svg" type="image/svg+xml" style="width: 100%; height: 100%;">
+                    Extra Large
+                </object>
+            </div>
+            <span>.svg-xl</span>
+        </div>
+    </div>
+
+    <script>
+        // Test that all SVGs load correctly
+        document.addEventListener('DOMContentLoaded', function() {
+            const objects = document.querySelectorAll('object');
+            let loadedCount = 0;
+
+            objects.forEach(obj => {
+                obj.addEventListener('load', function() {
+                    loadedCount++;
+                    console.log(`SVG loaded: ${this.data}`);
+                });
+
+                obj.addEventListener('error', function() {
+                    console.error(`Failed to load SVG: ${this.data}`);
+                    this.innerHTML = 'SVG Load Error';
+                });
+            });
+
+            console.log(`Testing ${objects.length} SVG icons...`);
+        });
+    </script>
+</body>
+</html>

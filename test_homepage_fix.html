@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test Homepage SVG Fix</title>
+    <style>
+        .skill-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+        }
+        .svg-icon {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing Homepage Featured Section SVG Loading</h1>
+    <div id="test-result"></div>
+
+    <script>
+        // Simulate the renderSVGIcon function
+        async function renderSVGIcon(iconPath) {
+            if (!iconPath || typeof iconPath !== 'string') return '';
+
+            try {
+                // Check if it's a path to an SVG file
+                if (iconPath.startsWith('res/svg/') && iconPath.endsWith('.svg')) {
+                    const response = await fetch(iconPath);
+                    if (response.ok) {
+                        const svgContent = await response.text();
+                        return svgContent;
+                    }
+                }
+                // If not a valid SVG path, return the original content (could be an emoji)
+                return iconPath;
+            } catch (error) {
+                console.error('Error loading SVG icon:', error);
+                return iconPath;
+            }
+        }
+
+        // Test the fixed renderHomePage featured section
+        async function testFeaturedRendering() {
+            const testData = {
+                featured: [
+                    {
+                        "title": "Linux Development",
+                        "description": "Building Open Source and sustainable Software for Linux",
+                        "icon": "res/svg/Linux.svg"
+                    },
+                    {
+                        "title": "Cloud Management",
+                        "description": "Managing and maintaining cloud services",
+                        "icon": "res/svg/Cloud.svg"
+                    },
+                    {
+                        "title": "Penetration Testing",
+                        "description": "Testing the security of systems and networks",
+                        "icon": "res/svg/pen-testing.svg"
+                    }
+                ]
+            };
+
+            let html = '<h2>Featured Section Test</h2>';
+            html += '<div class="skills-grid">';
+
+            for (const item of testData.featured) {
+                html += `<div class="skill-item">`;
+                if (item.icon) {
+                    const iconContent = await renderSVGIcon(item.icon);
+                    html += `<div class="svg-icon">${iconContent}</div>`;
+                }
+                html += `<h4>${item.title}</h4>`;
+                if (item.description) {
+                    html += `<p style="font-size: 0.9rem;">${item.description}</p>`;
+                }
+                html += `</div>`;
+            }
+            html += '</div>';
+
+            document.getElementById('test-result').innerHTML = html;
+            console.log('Homepage featured test completed successfully!');
+        }
+
+        // Run the test
+        testFeaturedRendering().catch(error => {
+            console.error('Test failed:', error);
+            document.getElementById('test-result').innerHTML = `<p style="color: red;">Test failed: ${error.message}</p>`;
+        });
+    </script>
+</body>
+</html>

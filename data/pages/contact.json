@@ -34,28 +34,27 @@
     {
       "name": "Email",
       "url": "mailto:contact@example.com",
-      "icon": "📧"
+      "icon": "res/svg/email.svg"
     },
     {
       "name": "GitHub",
       "url": "https://github.com",
-      "icon": "💻"
+      "icon": "res/svg/github.svg"
     },
     {
       "name": "LinkedIn",
       "url": "https://linkedin.com",
-      "icon": "💼"
+      "icon": "res/svg/server.svg"
     },
     {
       "name": "Twitter",
       "url": "https://twitter.com",
-      "icon": "🐦"
+      "icon": "res/svg/twitter.svg"
     },
     {
       "name": "Portfolio",
       "url": "https://example.com",
-      "icon": "🌐"
+      "icon": "res/svg/network.svg"
     }
   ]
 }
-

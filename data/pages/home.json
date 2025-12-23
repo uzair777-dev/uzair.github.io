@@ -15,18 +15,17 @@
     {
       "title": "Linux Development",
       "description": "Building Open Source and sustainable Software for Linux",
-      "icon": "🐧"
+      "icon": "res/svg/Linux.svg"
     },
     {
       "title": "Cloud Management",
       "description": "Managing and maintaining cloud services, to keep stuff running smoothly",
-      "icon": "☁️"
+      "icon": "res/svg/Cloud.svg"
     },
     {
       "title": "Penetration Testing",
       "description": "Testing the security of systems and networks to find vulnerabilities and weaknesses",
-      "icon": "🎨"
+      "icon": "res/svg/pen-testing.svg"
     }
   ]
 }
-

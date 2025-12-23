@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test SVG Fix</title>
+    <style>
+        .skill-item {
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px;
+            display: inline-block;
+        }
+        .svg-icon {
+            width: 50px;
+            height: 50px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Testing SVG Icon Loading</h1>
+    <div id="test-result"></div>
+
+    <script>
+        // Simulate the renderSVGIcon function
+        async function renderSVGIcon(iconPath) {
+            if (!iconPath || typeof iconPath !== 'string') return '';
+
+            try {
+                // Check if it's a path to an SVG file
+                if (iconPath.startsWith('res/svg/') && iconPath.endsWith('.svg')) {
+                    const response = await fetch(iconPath);
+                    if (response.ok) {
+                        const svgContent = await response.text();
+                        return svgContent;
+                    }
+                }
+                // If not a valid SVG path, return the original content (could be an emoji)
+                return iconPath;
+            } catch (error) {
+                console.error('Error loading SVG icon:', error);
+                return iconPath;
+            }
+        }
+
+        // Test the fixed renderAboutPage function
+        async function testSkillsRendering() {
+            const testData = {
+                skills: [
+                    {
+                        "name": "Python",
+                        "level": "Advanced",
+                        "icon": "res/svg/python.svg"
+                    },
+                    {
+                        "name": "Bash",
+                        "level": "Advanced",
+                        "icon": "res/svg/bash.svg"
+                    }
+                ]
+            };
+
+            let html = '<h2>Skills Test</h2>';
+            html += '<div class="skills-grid">';
+
+            for (const skill of testData.skills) {
+                html += `<div class="skill-item">`;
+                if (skill.icon) {
+                    const iconContent = await renderSVGIcon(skill.icon);
+                    html += `<div class="svg-icon">${iconContent}</div>`;
+                }
+                html += `<h4>${skill.name}</h4>`;
+                if (skill.level) {
+                    html += `<p style="font-size: 0.9rem;">${skill.level}</p>`;
+                }
+                html += `</div>`;
+            }
+            html += '</div>';
+
+            document.getElementById('test-result').innerHTML = html;
+            console.log('Test completed successfully!');
+        }
+
+        // Run the test
+        testSkillsRendering().catch(error => {
+            console.error('Test failed:', error);
+            document.getElementById('test-result').innerHTML = `<p style="color: red;">Test failed: ${error.message}</p>`;
+        });
+    </script>
+</body>
+</html>

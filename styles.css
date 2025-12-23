@@ -14,7 +14,7 @@
     --bg-light: #ffffff;
     --border-color: #e5e7eb;
     --shadow: 13px -6px 32px rgba(121, 133, 235, 1);
-    --shadow-lg: 0 18px 32px rgba(0, 0, 0, 0.15);
+    --shadow-lg: 0px 0px 28px -8px rgb(89 96 205);
     --glow: 0 0 20px rgba(99, 102, 241, 0.15);
     --glow-strong: 0 0 32px rgba(99, 102, 241, 0.2);
     --preloader-bg: rgb(255, 255, 255);
@@ -501,6 +501,45 @@ h1, h2, h3, h4, h5, h6 {
     text-align: center;
     color: var(--text-light);
     margin-top: 4rem;
+}
+
+/* SVG Icon Styles */
+.svg-icon {
+    display: inline-block;
+    width: 2rem;
+    height: 2rem;
+    fill: currentColor;
+    vertical-align: middle;
+    margin-bottom: 0.5rem;
+}
+
+.skill-item .svg-icon,
+.experience-card .svg-icon,
+.social-links .svg-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    margin-bottom: 1rem;
+}
+
+/* Adjustable SVG height classes */
+.svg-sm {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+.svg-md {
+    width: 2rem;
+    height: 2rem;
+}
+
+.svg-lg {
+    width: 3rem;
+    height: 3rem;
+}
+
+.svg-xl {
+    width: 4rem;
+    height: 4rem;
 }
 
 /* Loading State */

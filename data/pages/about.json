@@ -11,43 +11,63 @@
     {
       "name": "Python",
       "level": "Advanced",
-      "icon": "🐍"
-    },
-    {
-      "name": "SQL",
-      "level": "Intermediate",
-      "icon": "🔍"
-    },
-    {
-      "name": "Bash",
-      "level": "Advanced",
-      "icon": "💻"
+      "icon": "res/svg/python.svg"
     },
     {
       "name": "Linux",
       "level": "Advanced",
-      "icon": "🐧"
+      "icon": "res/svg/Linux.svg"
     },
     {
-      "name": "AWS",
-      "level": "Intermediate",
-      "icon": "🌩️"
+      "name": "Github",
+      "level": "Advanced",
+      "icon": "res/svg/github.svg"
+    },
+    {
+      "name": "Bash",
+      "level": "Advanced",
+      "icon": "res/svg/bash.svg"
     },
     {
       "name": "Git",
       "level": "Advanced",
-      "icon": "⚡"
+      "icon": "res/svg/git.svg"
+    },
+    {
+      "name": "SQL",
+      "level": "Intermediate",
+      "icon": "res/svg/sql.svg"
+    },
+    
+    {
+      "name": "AWS",
+      "level": "Intermediate",
+      "icon": "res/svg/aws.svg"
     },
     {
       "name": "Windows",
       "level": "Intermediate",
-      "icon": "🪟"
+      "icon": "res/svg/windows.svg"
     },
     {
       "name": "Networking",
       "level": "Advanced",
-      "icon": "🌐"
+      "icon": "res/svg/network.svg"
+    },
+    {
+      "name": "NodeJS",
+      "level": "Basic",
+      "icon": "res/svg/node-js.svg"
+    },
+    {
+      "name": "Docker",
+      "level": "Basic",
+      "icon": "res/svg/docker.svg"
+    },
+    {
+      "name": "Cisco application",
+      "level": "Basic",
+      "icon": "res/svg/cisco.svg"
     }
   ]
 }
-

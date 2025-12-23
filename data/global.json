@@ -28,23 +28,28 @@
       }
     ]
   },
-  "footer": {
+    "footer": {
     "copyright": "© 2026 Uzair's Portfolio. All rights reserved by the developer.",
     "links": [
       {
         "name": "GitHub",
         "url": "https://github.com/uzair777-dev",
-        "icon": "🔗"
+        "icon": "res/svg/github.svg"
       },
       {
         "name": "Email",
         "url": "mailto:uzairshaikhking777@gmail.com",
-        "icon": "💼"
+        "icon": "res/svg/email.svg"
       },
       {
         "name": "Twitter",
         "url": "https://twitter.com",
-        "icon": "🐦"
+        "icon": "res/svg/twitter.svg"
+      },
+      {
+        "name": "Instagram",
+        "url": "https://instagram.com/justaguywithaveryuniquename",
+        "icon": "res/svg/instagram.svg"
       }
     ]
   },
