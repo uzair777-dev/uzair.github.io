@@ -289,7 +289,19 @@ function renderExperiencePage(data) {
     let html = '<div class="container">';
     html += '<section class="section">';
     html += `<h1 class="section-title">${data.title || 'Experience'}</h1>`;
-    
+
+    // Resume button at the top
+    if (data.resume && data.resume.link) {
+        html += '<div style="margin-bottom: 2rem; text-align: center;">';
+        html += '<div style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;">';
+        html += `<p style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-primary);">${data.resume.outsideText || 'Download my Resume'}</p>`;
+        html += `<a href="${data.resume.link}" target="_blank" class="btn" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary); color: var(--text-color); text-decoration: none; border-radius: 4px; font-weight: bold;">`;
+        html += `${data.resume.insideText || 'Download Resume'}`;
+        html += '</a>';
+        html += '</div>';
+        html += '</div>';
+    }
+
     // Work Experience timeline (includes "Looking for Work" as first item)
     if (data.work && data.work.length > 0) {
         html += '<h2 class="experience-subtitle">Work Experience</h2>';
@@ -301,7 +313,7 @@ function renderExperiencePage(data) {
         });
         html += '</div>';
     }
-    
+
     // Education timeline
     if (data.academic && data.academic.length > 0) {
         html += '<h2 class="experience-subtitle">Education</h2>';
@@ -313,7 +325,7 @@ function renderExperiencePage(data) {
         });
         html += '</div>';
     }
-    
+
     html += '</section>';
     html += '</div>';
     return html;
