@@ -295,7 +295,7 @@ function renderExperiencePage(data) {
         html += '<div style="margin-bottom: 2rem; text-align: center;">';
         // html += '<div style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;">';
         html += '<div class ="experience-card">';
-        html += `<p style="margin-bottom: 1rem; font-size: 1.1rem; color: var(--text-primary);">${data.resume.outsideText || 'Download my Resume'}</p>`;
+        html += `<h3 style="margin-bottom: 1rem; font-size: 24px; color: var(--text-primary);">${data.resume.outsideText || 'Download my Resume'}</h3>`;
         html += `<a href="${data.resume.link}" target="_blank" class="btn" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary); color: var(--text-color); text-decoration: none; border-radius: 4px; font-weight: bold;">`;
         html += `${data.resume.insideText || 'Download Resume'}`;
         html += '</a>';
