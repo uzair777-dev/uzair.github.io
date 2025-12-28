@@ -1,6 +1,7 @@
 {
   "type": "experience",
   "title": "Experience",
+  "resume": "/res/pdf",
   "work": [
     {
       "title": "Looking for Work",
