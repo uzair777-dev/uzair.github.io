@@ -1,7 +1,12 @@
 {
   "type": "experience",
   "title": "Experience",
-  "resume": "/res/pdf/resume.pdf",
+  "resume": {
+    "link": "/res/pdf/resume.pdf",
+    "insideText": "Click here",
+    "outsideText" : "Want a formatted pdf of my Resume?"
+  
+  },
   "work": [
     {
       "title": "Looking for Work",
