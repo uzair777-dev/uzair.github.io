@@ -2,7 +2,7 @@
   "type": "experience",
   "title": "Experience",
   "resume": {
-    "link": "/res/pdf/resume.pdf",
+    "link": "/res/resume/resume.pdf",
     "insideText": "Click here",
     "outsideText" : "Want a formatted pdf of my Resume?"
   
