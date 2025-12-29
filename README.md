@@ -4,7 +4,7 @@ This is my portfolio website source code.
 
 You can use it for your own website under the licence GPLv3 (if you what that means)
 
-I'll explain everything below if I don't get distracte- *Oh a butterfly* 🦋 ✨ 
+I'll explain everything below if I don't get distracte- *Ooo a butterfly* 🦋 ✨ 
 
 ---------------------------
 
