@@ -38,7 +38,7 @@
     },
     {
       "name": "GitHub",
-      "url": "https://github.com/",
+      "url": "https://github.com/uzair777-dev",
       "icon": "res/svg/github.svg"
     },
     {
@@ -47,14 +47,14 @@
       "icon": "res/svg/linkedin.svg"
     },
     {
-      "name": "Twitter",
-      "url": "https://twitter.com",
-      "icon": "res/svg/twitter.svg"
+      "name": "Instagram",
+      "url": "https://instagram.com/justaguywithaveryuniquename",
+      "icon": "res/svg/instagram.svg"
     },
     {
       "name": "Portfolio",
       "url": "https://uzairshaikh.pages.dev",
-      "icon": "res/svg/website.svg"
+      "icon": "res/svg/internet.svg"
     }
   ]
 }

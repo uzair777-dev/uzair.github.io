@@ -16,7 +16,7 @@
     {
       "name": "Linux",
       "level": "Advanced",
-      "icon": "res/svg/Linux.svg"
+      "icon": "res/svg/linux.svg"
     },
     {
       "name": "Github",
