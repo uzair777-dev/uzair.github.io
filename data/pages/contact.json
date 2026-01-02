@@ -33,18 +33,18 @@
   "social": [
     {
       "name": "Email",
-      "url": "mailto:contact@example.com",
+      "url": "mailto: uzairshaikhking777@gmail.com",
       "icon": "res/svg/email.svg"
     },
     {
       "name": "GitHub",
-      "url": "https://github.com",
+      "url": "https://github.com/",
       "icon": "res/svg/github.svg"
     },
     {
       "name": "LinkedIn",
-      "url": "https://linkedin.com",
-      "icon": "res/svg/server.svg"
+      "url": "https://www.linkedin.com/in/uzair-shaikh-695798269",
+      "icon": "res/svg/linkedin.svg"
     },
     {
       "name": "Twitter",
@@ -53,7 +53,7 @@
     },
     {
       "name": "Portfolio",
-      "url": "https://example.com",
+      "url": "https://uzairshaikh.pages.dev",
       "icon": "res/svg/network.svg"
     }
   ]
