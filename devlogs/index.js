@@ -14,6 +14,7 @@ let devLogs       = [];
 let currentFilter = 'all';
 let currentPage   = 1;
 let sortOrder     = 'desc'; // 'desc' = newest first, 'asc' = oldest first
+let cachedGlobalConfig = null;
 const LOGS_PER_PAGE = 5;
 const glitchFonts   = [];
 
@@ -184,19 +185,22 @@ async function loadGlitchFonts() {
     let cache = null;
     try { cache = await caches.open(FONT_CACHE_NAME); } catch (_) {}
 
-    for (let i = 0; i < files.length; i++) {
-        try {
-            const name = `glitch-font-${i}`;
-            if (cache) {
-                const cached = await cache.match(files[i]);
-                if (!cached) await cache.add(files[i]);
-            }
-            const face = new FontFace(name, `url(${files[i]})`);
-            await face.load();
-            document.fonts.add(face);
-            glitchFonts.push(name);
-        } catch (e) {
-            console.warn(`Glitch font ${files[i]} skipped:`, e);
+    // Load all fonts in parallel
+    const results = await Promise.allSettled(files.map(async (file, i) => {
+        const name = `glitch-font-${i}`;
+        if (cache) {
+            const cached = await cache.match(file);
+            if (!cached) await cache.add(file);
+        }
+        const face = new FontFace(name, `url(${file})`);
+        await face.load();
+        document.fonts.add(face);
+        return name;
+    }));
+
+    for (const result of results) {
+        if (result.status === 'fulfilled') {
+            glitchFonts.push(result.value);
         }
     }
 }
@@ -289,6 +293,7 @@ async function setupNavigation() {
         const resp = await fetch('/data/global.json');
         if (!resp.ok) throw new Error();
         const cfg = await resp.json();
+        cachedGlobalConfig = cfg;
 
         if (cfg.navigation?.menu) {
             navMenu.innerHTML = '';
@@ -476,9 +481,13 @@ function createCard(log) {
 
 async function setupFooter() {
     try {
-        const resp = await fetch('/data/global.json');
-        if (!resp.ok) return;
-        const cfg = await resp.json();
+        // Reuse cached config from setupNavigation if available
+        let cfg = cachedGlobalConfig;
+        if (!cfg) {
+            const resp = await fetch('/data/global.json');
+            if (!resp.ok) return;
+            cfg = await resp.json();
+        }
         const footer = document.getElementById('footer');
         if (!cfg.footer) return;
 

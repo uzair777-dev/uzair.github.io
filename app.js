@@ -1,35 +1,7 @@
 // Global state
 let globalConfig = {};
 let currentPage = 'home';
-
-// Initialize the application
-async function init() {
-    showPreloader();
-    try {
-        // Load global configuration
-        globalConfig = await loadJSON('data/global.json');
-        
-        // Set up navigation
-        setupNavigation();
-        
-        // Load initial page
-        loadPage('home');
-        
-        // Set up mobile menu toggle
-        setupMobileMenu();
-        
-        // Set up theme toggle
-        setupThemeToggle();
-        setTheme(getPreferredTheme());
-    } catch (error) {
-        console.error('Error initializing app:', error);
-        document.getElementById('main-content').innerHTML = 
-            '<div class="loading"><p>Error loading content. Please check your data files.</p></div>';
-        hidePreloader();
-    } finally {
-        hidePreloader();
-    }
-}
+const svgCache = {};
 
 // Load JSON file
 async function loadJSON(path) {
@@ -190,12 +162,12 @@ async function renderHomePage(data) {
     }
 
     if (data.hero && data.hero.description) {
-        html += `<p style="max-width: 600px; margin: 0 auto;">${data.hero.description}</p>`;
+        html += `<p class="hero-description">${data.hero.description}</p>`;
     }
 
     if (data.hero && data.hero.cta) {
         const ctaPage = data.hero.cta.link || 'about';
-        html += `<a href="#" class="btn btn-glass" data-cta-page="${ctaPage}" style="display: inline-block; margin-top: 2rem; text-decoration: none;">${data.hero.cta.text || 'Learn More'}</a>`;
+        html += `<a href="#" class="btn btn-glass hero-cta" data-cta-page="${ctaPage}">${data.hero.cta.text || 'Learn More'}</a>`;
     }
 
     html += '</section>';
@@ -213,7 +185,7 @@ async function renderHomePage(data) {
             }
             html += `<h4>${item.title}</h4>`;
             if (item.description) {
-                html += `<p style="font-size: 0.9rem; color: var(--text-light);">${item.description}</p>`;
+                html += `<p class="text-secondary">${item.description}</p>`;
             }
             html += `</div>`;
         }
@@ -225,20 +197,20 @@ async function renderHomePage(data) {
     return html;
 }
 
-// Helper function to render SVG icons
+// Helper function to render SVG icons (with in-memory cache)
 async function renderSVGIcon(iconPath) {
     if (!iconPath || typeof iconPath !== 'string') return '';
 
     try {
-        // Check if it's a path to an SVG file
         if (iconPath.startsWith('res/svg/') && iconPath.endsWith('.svg')) {
+            if (svgCache[iconPath]) return svgCache[iconPath];
             const response = await fetch(iconPath);
             if (response.ok) {
                 const svgContent = await response.text();
+                svgCache[iconPath] = svgContent;
                 return svgContent;
             }
         }
-        // If not a valid SVG path, return the original content (could be an emoji)
         return iconPath;
     } catch (error) {
         console.error('Error loading SVG icon:', error);
@@ -269,7 +241,7 @@ async function renderAboutPage(data) {
 
     // Skills section
     if (data.skills && data.skills.length > 0) {
-        html += '<h2 style="margin-top: 3rem; margin-bottom: 1.5rem;">Skills</h2>';
+        html += '<h2 class="skills-heading">Skills</h2>';
         html += '<div class="skills-grid">';
         for (const skill of data.skills) {
             html += `<div class="skill-item">`;
@@ -279,7 +251,7 @@ async function renderAboutPage(data) {
             }
             html += `<h4>${skill.name}</h4>`;
             if (skill.level) {
-                html += `<p style="font-size: 0.9rem; color: var(--text-light);">${skill.level}</p>`;
+                html += `<p class="text-secondary">${skill.level}</p>`;
             }
             html += `</div>`;
         }
@@ -300,11 +272,10 @@ function renderExperiencePage(data) {
 
     // Resume button at the top
     if (data.resume && data.resume.link) {
-        html += '<div style="margin-bottom: 2rem; text-align: center;">';
-        // html += '<div style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); max-width: 600px; margin: 0 auto;">';
-        html += '<div class ="experience-card">';
-        html += `<h3 style="margin-bottom: 1rem; font-size: 24px; color: var(--text-primary);">${data.resume.outsideText || 'Download my Resume'}</h3>`;
-        html += `<a href="${data.resume.link}" target="_blank" class="btn" style="display: inline-block; padding: 0.75rem 1.5rem; background: var(--primary); color: var(--text-color); text-decoration: none; border-radius: 4px; font-weight: bold;">`;
+        html += '<div class="resume-wrapper">';
+        html += '<div class="experience-card">';
+        html += `<h3 class="resume-title">${data.resume.outsideText || 'Download my Resume'}</h3>`;
+        html += `<a href="${data.resume.link}" target="_blank" class="btn resume-download-link">`;
         html += `${data.resume.insideText || 'Download Resume'}`;
         html += '</a>';
         html += '</div>';
@@ -370,9 +341,9 @@ function renderExperienceCard(exp) {
     }
     
     if (exp.technologies && Array.isArray(exp.technologies)) {
-        html += '<div style="margin-top: 1rem;">';
+        html += '<div class="tech-tags">';
         html += '<strong>Technologies: </strong>';
-        html += exp.technologies.map(tech => `<span style="background: var(--bg-light); padding: 0.25rem 0.5rem; border-radius: 3px; margin-right: 0.5rem; font-size: 0.9rem;">${tech}</span>`).join('');
+        html += exp.technologies.map(tech => `<span class="tech-tag">${tech}</span>`).join('');
         html += '</div>';
     }
     
@@ -388,7 +359,7 @@ async function renderContactPage(data) {
     html += '<div class="section-content">';
 
     if (data.description) {
-        html += `<p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">${data.description}</p>`;
+        html += `<p class="description-centered">${data.description}</p>`;
     }
 
     html += '<div class="contact-form">';
@@ -433,27 +404,26 @@ function renderResourcesPage(data) {
     html += '<section class="section">';
     html += `<h1 class="section-title">${data.title || 'Resources'}</h1>`;
     const note1 = data.note1;
-    html += '<p style="font-size: 0.9rem; color: var(--text-light);"><center>'
+    html += '<p class="note-text"><center>'
     html += note1;
     html+='</center></p>';
     html += '<div class="section-content">';
 
     if (data.description) {
-        html += `<p style="text-align: center; margin-bottom: 2rem; color: var(--text-light);">${data.description}</p>`;
+        html += `<p class="description-centered">${data.description}</p>`;
     }
 
     // Semester buttons vertical layout
     if (data.folders && data.folders.length > 0) {
-        html += '<div class="resources-vertical" style="display: flex; flex-direction: column; gap: 1.5rem; margin: 2rem 0; max-width: 600px; margin-left: auto; margin-right: auto;">';
+        html += '<div class="resources-vertical">';
 
         data.folders.forEach(folder => {
             // Extract folder ID from Google Drive link
             const folderId = extractGoogleDriveFolderId(folder.link);
-            const iframeId = `resources-iframe-${folder.sem}`;
 
-            html += '<div class="resource-item" style="background: var(--bg-light); padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">';
-            html += `<h3 style="margin-top: 0; margin-bottom: 1rem; color: var(--primary-color);">${folder.text}</h3>`;
-            html += `<button class="btn btn-resource" data-folder-id="${folderId}" style="width: 100%; padding: 0.75rem; background: var(--primary); color: var(--text-color); border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">`;
+            html += '<div class="resource-item">';
+            html += `<h3 class="resource-item-title">${folder.text}</h3>`;
+            html += `<button class="btn btn-resource" data-folder-id="${folderId}">`;
             html += `View ${folder.text} Resources`;
             html += '</button>';
             html += '</div>';
@@ -464,7 +434,7 @@ function renderResourcesPage(data) {
 
     html += '</div>';
     const note2 = data.note2;
-    html += '<p style="font-size: 0.9rem; color: var(--text-light);"><center>'
+    html += '<p class="note-text"><center>'
     html += note2;
     html+='</center></p>';
     html += '</section>';
@@ -560,46 +530,16 @@ function setupResourceButtons() {
             // Create exclusive popup iframe
             currentPopup = document.createElement('div');
             currentPopup.id = 'exclusive-resource-popup';
-            currentPopup.style.position = 'fixed';
-            currentPopup.style.top = '0';
-            currentPopup.style.left = '0';
-            currentPopup.style.width = '100%';
-            currentPopup.style.height = '100%';
-            currentPopup.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
-            currentPopup.style.zIndex = '9999';
-            currentPopup.style.display = 'flex';
-            currentPopup.style.justifyContent = 'center';
-            currentPopup.style.alignItems = 'center';
-            currentPopup.style.flexDirection = 'column';
-            currentPopup.style.backgroundColor= "var(--popup-color)"
+            currentPopup.className = 'resource-popup';
 
             // Create popup content container
             const popupContent = document.createElement('div');
-            popupContent.style.backgroundColor = 'var(--bg-primary)';
-            popupContent.style.padding = '2rem';
-            popupContent.style.borderRadius = '8px';
-            popupContent.style.width = '90%';
-            popupContent.style.maxWidth = '1200px';
-            popupContent.style.height = '80%';
-            popupContent.style.maxHeight = '90vh';
-            popupContent.style.position = 'relative';
-            popupContent.style.boxShadow = '0 4px 20px rgba(0, 0, 0, 0.3)';
+            popupContent.className = 'resource-popup-content';
 
             // Create close button
             const closeButton = document.createElement('button');
             closeButton.textContent = '×';
-            closeButton.style.position = 'absolute';
-            closeButton.style.top = '10px';
-            closeButton.style.right = '10px';
-            closeButton.style.background = 'var(--pop-upcolor)';
-            closeButton.style.color = 'var(--popup-text-color)';
-            closeButton.style.border = 'none';
-            closeButton.style.borderRadius = '50%';
-            closeButton.style.width = '30px';
-            closeButton.style.height = '30px';
-            closeButton.style.cursor = 'pointer';
-            closeButton.style.fontSize = '18px';
-            closeButton.style.zIndex = '10000';
+            closeButton.className = 'resource-popup-close';
 
             closeButton.addEventListener('click', () => {
                 currentPopup.remove();
@@ -609,27 +549,16 @@ function setupResourceButtons() {
             // Create title
             const popupTitle = document.createElement('h2');
             popupTitle.textContent = `${semesterText} Resources`;
-            popupTitle.style.marginTop = '0';
-            popupTitle.style.color = 'var(--popup-text-color)';
-            popupTitle.style.textAlign = 'center';
+            popupTitle.className = 'resource-popup-title';
 
-            // Create iframe container with sandbox attributes to prevent navigation
+            // Create iframe container
             const iframeContainer = document.createElement('div');
-            iframeContainer.style.width = '100%';
-            iframeContainer.style.height = 'calc(100% - 80px)';
-            iframeContainer.style.marginTop = '1rem';
-            iframeContainer.style.border = '1px solid var(--shadow-lg)';
-            iframeContainer.style.borderRadius = '4px';
-            iframeContainer.style.overflow = 'hidden';
+            iframeContainer.className = 'resource-popup-iframe';
 
             // Create iframe without sandboxing for full Google Drive functionality
             const iframe = document.createElement('iframe');
             iframe.src = `https://drive.google.com/embeddedfolderview?id=${folderId}#list`;
-            iframe.style.width = '100%';
-            iframe.style.height = '100%';
-            iframe.style.border = 'none';
             iframe.allow = 'fullscreen; clipboard-read; clipboard-write';
-            // Remove sandbox attribute completely to allow Google Drive to function properly
             iframe.referrerPolicy = 'strict-origin-when-cross-origin';
 
             // Add load event listener for better user experience
@@ -639,15 +568,14 @@ function setupResourceButtons() {
 
             iframe.addEventListener('error', function() {
                 console.error('Error loading Google Drive iframe');
-                // Show user-friendly error message
                 iframeContainer.innerHTML = `
-                    <div style="padding: 2rem; text-align: center; color: var(--text-primary);">
+                    <div style="padding: 2rem; text-align: center; color: var(--text-color);">
                         <h3>Unable to load Google Drive content</h3>
                         <p>There was an error loading the resources. Please try again later.</p>
-                        <p style="font-size: 0.9rem; color: var(--text-light); margin-top: 1rem;">
+                        <p class="text-secondary" style="margin-top: 1rem;">
                             If this issue persists, you may need to check your browser settings or try a different browser.
                         </p>
-                        <button style="margin-top: 1rem; padding: 0.5rem 1rem; background: var(--primary); color: white; border: none; border-radius: 4px; cursor: pointer;"
+                        <button class="btn" style="margin-top: 1rem;"
                                 onclick="window.open('https://drive.google.com/drive/folders/${folderId}', '_blank')">
                             Open in Google Drive
                         </button>
@@ -670,8 +598,6 @@ function setupResourceButtons() {
                     currentPopup = null;
                 }
             });
-            //On god, ye na hora mujse 
-            // document.getElementsByClassName('flip-entry-title').style.color = "var('--text-color')";
 
             // Add to body
             document.body.appendChild(currentPopup);
@@ -831,70 +757,54 @@ function hidePreloader() {
     }
 }
 
-// Preload assets
+// Preload assets — fetches all JSONs, images, and SVGs into browser cache
 async function preloadAssets() {
-    if (!globalConfig.preloader?.enabled) {
-        return;
-    }
-    
-    const assets = [];
-    
-    // Preload images from pages
-    const pageFiles = ['home', 'about', 'experience', 'contact'];
-    for (const page of pageFiles) {
-        try {
-            const pageData = await loadJSON(`data/pages/${page}.json`);
-            if (pageData.hero?.image) {
-                assets.push(pageData.hero.image);
-            }
-            if (pageData.image) {
-                assets.push(pageData.image);
-            }
-            if (pageData.work) {
-                pageData.work.forEach(exp => {
-                    if (exp.image) assets.push(exp.image);
-                });
-            }
-            if (pageData.academic) {
-                pageData.academic.forEach(exp => {
-                    if (exp.image) assets.push(exp.image);
-                });
-            }
-        } catch (error) {
-            console.warn(`Could not preload assets for ${page}:`, error);
+    try {
+        // 1. Load global config first (needed by rest of app)
+        globalConfig = await loadJSON('data/global.json');
+
+        const assetsToPreload = [];
+
+        // 2. Collect footer SVG icons
+        if (globalConfig.footer?.links) {
+            globalConfig.footer.links.forEach(link => {
+                if (link.icon) assetsToPreload.push(link.icon);
+            });
         }
+
+        // 3. Determine page names from navigation config
+        const pageNames = globalConfig.navigation?.menu?.map(m => m.page) || ['home', 'about', 'experience', 'contact', 'resources'];
+
+        // 4. Fetch all page JSONs in parallel and collect image/SVG paths
+        const pageResults = await Promise.allSettled(
+            pageNames.map(p => loadJSON(`data/pages/${p}.json`))
+        );
+
+        for (const result of pageResults) {
+            if (result.status !== 'fulfilled') continue;
+            const pd = result.value;
+            if (pd.hero?.image) assetsToPreload.push(pd.hero.image);
+            if (pd.image) assetsToPreload.push(pd.image);
+            if (pd.featured) pd.featured.forEach(i => { if (i.icon) assetsToPreload.push(i.icon); });
+            if (pd.skills) pd.skills.forEach(s => { if (s.icon) assetsToPreload.push(s.icon); });
+            if (pd.social) pd.social.forEach(l => { if (l.icon) assetsToPreload.push(l.icon); });
+            if (pd.work) pd.work.forEach(w => { if (w.image) assetsToPreload.push(w.image); });
+            if (pd.academic) pd.academic.forEach(a => { if (a.image) assetsToPreload.push(a.image); });
+        }
+
+        // 5. Deduplicate and preload all assets (SVGs also go into in-memory cache)
+        const unique = [...new Set(assetsToPreload)];
+        await Promise.allSettled(unique.map(async (url) => {
+            try {
+                const resp = await fetch(url);
+                if (resp.ok && url.endsWith('.svg')) {
+                    svgCache[url] = await resp.text();
+                }
+            } catch (_) {}
+        }));
+    } catch (error) {
+        console.warn('Asset preloading failed:', error);
     }
-    
-    // Preload other assets
-    assets.push('styles.css');
-    assets.push('app.js');
-    
-    // Load assets
-    const promises = assets.map(asset => {
-        return new Promise((resolve, reject) => {
-            if (asset.endsWith('.css')) {
-                const link = document.createElement('link');
-                link.rel = 'stylesheet';
-                link.href = asset;
-                link.onload = resolve;
-                link.onerror = reject;
-                document.head.appendChild(link);
-            } else if (asset.endsWith('.js')) {
-                const script = document.createElement('script');
-                script.src = asset;
-                script.onload = resolve;
-                script.onerror = reject;
-                document.head.appendChild(script);
-            } else {
-                const img = new Image();
-                img.onload = resolve;
-                img.onerror = reject;
-                img.src = asset;
-            }
-        });
-    });
-    
-    await Promise.allSettled(promises);
 }
 
 // Initialize when DOM is loaded
@@ -902,11 +812,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     window.__preloaderStartTime = performance.now();
     showPreloader();
     try {
-        // Preload assets first
+        // Preload all assets and set globalConfig
         await preloadAssets();
-        
-        // Load global configuration
-        globalConfig = await loadJSON('data/global.json');
         
         // Set up navigation
         setupNavigation();
