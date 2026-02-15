@@ -76,8 +76,8 @@ The feed uses a custom XML syntax (inspired by RSS but different):
         Full content shown on expand. Supports HTML tags.
       </content>
       <pubDate>
-        <date>1770976574</date>           <!-- Unix timestamp -->
-        <timezone>GMT</timezone>
+        <date>1770976574</date>           <!-- Unix timestamp,Why? cuz i like torturing myself -->
+        <timezone>IST</timezone>           <!-- Timezone-->
       </pubDate>
     </item>
   </channel>
@@ -87,10 +87,20 @@ The feed uses a custom XML syntax (inspired by RSS but different):
 ### Custom Tags (inside `<content>`)
 
 | Tag | What it does |
-|---|---|
+| --- | --- |
 | `<censor>text</censor>` | Replaces every character with `█` (U+2588) |
-| `<PCensor>text</PCensor>` | Partial censor — shows ~30% of each word, rest is `*` |
-| `<glitch intensity="N">text</glitch>` | Replaces every letter with a random letter using a random font from `data/fonts/`. Intensity (2-10) controls animation speed. If no text given, generates 3-7 random characters |
+| `<PCensor>text</PCensor>` | Partial censor — first and second-to-last char visible, rest is `*` |
+| `<glitch intensity="N">text</glitch>` | Random font + random letter per character. Intensity (2-10) = animation speed. Empty tag → 3-7 random chars |
+
+### Supported HTML Tags
+
+Standard HTML works inside `<content>`. Use XML self-closing syntax for void elements (`<br/>`, `<hr/>`, `<img src="x"/>`).
+
+Styled tags: `a`, `img`, `br`, `hr`, `h1`–`h6`, `p`, `ul`/`ol`/`li`, `blockquote`, `code`, `pre`, `table`, `kbd`, `mark`, `sub`, `sup`, `s`, `u`, `details`/`summary`.
+
+### Full-Screen Overlay & Deep-Linking
+
+Clicking **Read More** opens a full-screen overlay. Direct link via hash: `/devlogs/#1` auto-opens the post with `<id>1</id>`. Closes with `×`, backdrop click, or `Esc`.
 
 ### How to add a new post
 
@@ -105,10 +115,10 @@ The feed uses a custom XML syntax (inspired by RSS but different):
 - [x] Make shi look presentable (hopefully)
 - [x] Do styling
 - [x] Make styling better
-- [ ] Unf\*ck styling
+- [x] Unf\*ck styling
 - [x] Add resume
-- [ ] Make it so that I can download resume
-- [ ] Link my socials
+- [x] Make it so that I can download resume
+- [x] Link my socials
 - [x] Add Notes for the subjects
 - [ ] Make stuff Look good
 - [ ] Optimise it
@@ -119,7 +129,9 @@ The feed uses a custom XML syntax (inspired by RSS but different):
 
 [Backup link](https://uzair777-dev.github.io)
 
-## Fonts used
+## Credits
+
+### Fonts used
 
 - 4-Sided
 - Black clouds white sky

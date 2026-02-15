@@ -48,12 +48,21 @@
   margin: 0 auto;
 }
 
+/* Controls Bar (filters + sort) */
+.devlog-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.75rem;
+  margin: 1rem 0 0;
+  flex-wrap: wrap;
+}
+
 /* Filter Bar */
 .devlog-filters {
   display: flex;
   justify-content: center;
   gap: 0.75rem;
-  margin: 1rem 0 0;
   flex-wrap: wrap;
 }
 
@@ -83,6 +92,37 @@
   color: white;
   border-color: transparent;
   box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+}
+
+/* Sort Button */
+.sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.5rem 1.25rem;
+  border: 1px solid var(--border-color);
+  border-radius: 100px;
+  background: transparent;
+  color: var(--text-light);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-weight: 500;
+}
+
+.sort-btn:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.sort-btn .sort-arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+  font-size: 0.85em;
+}
+
+.sort-btn.asc .sort-arrow {
+  transform: rotate(180deg);
 }
 
 /* Container */
@@ -292,8 +332,8 @@
 /* Close Button */
 .overlay-close {
   position: fixed;
-  top: 1.25rem;
-  left: 1.25rem;
+  top: 1.75rem;
+  left: 1.75rem;
   z-index: 10001;
   width: 44px;
   height: 44px;
@@ -319,7 +359,7 @@
 
 /* Overlay Header */
 .overlay-header {
-  padding: 4rem 3rem 2rem;
+  padding: 5rem 3rem 2rem;
   max-width: 900px;
   width: 100%;
   margin: 0 auto;
@@ -394,32 +434,123 @@
   flex: 1;
 }
 
+/* ── Images ── */
 .overlay-body img {
   max-width: 100%;
   height: auto;
   border-radius: 10px;
   margin: 1rem 0;
+  display: block;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* ── Links / Anchors ── */
 .overlay-body a {
   color: var(--primary-color);
   text-decoration: underline;
+  text-decoration-thickness: 1.5px;
   text-underline-offset: 3px;
-  transition: opacity 0.2s;
+  font-weight: 500;
+  transition: color 0.2s, text-decoration-color 0.2s;
 }
 
 .overlay-body a:hover {
-  opacity: 0.8;
+  color: var(--secondary-color);
+  text-decoration-color: var(--secondary-color);
 }
 
+.overlay-body a:visited {
+  color: var(--primary-color);
+  opacity: 0.85;
+}
+
+/* ── Headings inside content ── */
+.overlay-body h1,
+.overlay-body h2,
+.overlay-body h3,
+.overlay-body h4,
+.overlay-body h5,
+.overlay-body h6 {
+  color: var(--text-color);
+  font-weight: 700;
+  line-height: 1.3;
+  margin: 1.5rem 0 0.75rem;
+}
+
+.overlay-body h1 { font-size: 1.8rem; }
+.overlay-body h2 { font-size: 1.5rem; }
+.overlay-body h3 { font-size: 1.25rem; }
+.overlay-body h4 { font-size: 1.1rem; }
+.overlay-body h5 { font-size: 1rem; }
+.overlay-body h6 { font-size: 0.9rem; color: var(--text-light); }
+
+/* ── Paragraphs ── */
+.overlay-body p {
+  margin: 0.75rem 0;
+}
+
+/* ── Horizontal Rule ── */
+.overlay-body hr {
+  border: none;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--border-color),
+    var(--primary-color),
+    var(--border-color),
+    transparent
+  );
+  margin: 2rem 0;
+}
+
+/* ── Lists ── */
+.overlay-body ul,
+.overlay-body ol {
+  padding-left: 1.5rem;
+  margin: 0.75rem 0;
+}
+
+.overlay-body li {
+  margin: 0.35rem 0;
+  padding-left: 0.25rem;
+}
+
+.overlay-body ul li::marker {
+  color: var(--primary-color);
+}
+
+.overlay-body ol li::marker {
+  color: var(--primary-color);
+  font-weight: 600;
+}
+
+/* ── Blockquote ── */
+.overlay-body blockquote {
+  border-left: 3px solid var(--primary-color);
+  margin: 1rem 0;
+  padding: 0.75rem 1.25rem;
+  background: rgba(99, 102, 241, 0.04);
+  border-radius: 0 8px 8px 0;
+  font-style: italic;
+  color: var(--text-light);
+}
+
+.overlay-body blockquote p {
+  margin: 0;
+}
+
+/* ── Inline code ── */
 .overlay-body code {
   background: rgba(99, 102, 241, 0.08);
   padding: 0.15rem 0.4rem;
   border-radius: 4px;
   font-size: 0.9em;
-  font-family: 'SF Mono', 'Fira Code', monospace;
+  font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', 'JetBrains Mono', monospace;
+  border: 1px solid rgba(99, 102, 241, 0.12);
 }
 
+/* ── Code blocks ── */
 .overlay-body pre {
   background: var(--bg-light);
   padding: 1.25rem;
@@ -427,11 +558,107 @@
   overflow-x: auto;
   border: 1px solid var(--border-color);
   margin: 1rem 0;
+  line-height: 1.55;
 }
 
 .overlay-body pre code {
   background: none;
   padding: 0;
+  border: none;
+  font-size: 0.88em;
+}
+
+/* ── Tables ── */
+.overlay-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  font-size: 0.95em;
+}
+
+.overlay-body th,
+.overlay-body td {
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border-color);
+  text-align: left;
+}
+
+.overlay-body th {
+  background: rgba(99, 102, 241, 0.06);
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.overlay-body tr:nth-child(even) {
+  background: rgba(99, 102, 241, 0.02);
+}
+
+/* ── Keyboard shortcut ── */
+.overlay-body kbd {
+  display: inline-block;
+  padding: 0.15rem 0.45rem;
+  font-size: 0.85em;
+  font-family: 'SF Mono', 'Fira Code', monospace;
+  color: var(--text-color);
+  background: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-bottom-width: 2px;
+  border-radius: 4px;
+}
+
+/* ── Mark / highlight ── */
+.overlay-body mark {
+  background: rgba(99, 102, 241, 0.15);
+  color: inherit;
+  padding: 0.05rem 0.25rem;
+  border-radius: 3px;
+}
+
+/* ── Subscript & Superscript ── */
+.overlay-body sub,
+.overlay-body sup {
+  font-size: 0.75em;
+  line-height: 0;
+}
+
+/* ── Strikethrough & underline ── */
+.overlay-body s,
+.overlay-body del {
+  text-decoration: line-through;
+  opacity: 0.7;
+}
+
+.overlay-body u,
+.overlay-body ins {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* ── Details / Summary (collapsible) ── */
+.overlay-body details {
+  margin: 0.75rem 0;
+  padding: 0.5rem 1rem;
+  background: var(--bg-light);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+}
+
+.overlay-body summary {
+  cursor: pointer;
+  font-weight: 600;
+  color: var(--primary-color);
+  padding: 0.25rem 0;
+}
+
+.overlay-body details[open] summary {
+  margin-bottom: 0.5rem;
+}
+
+/* ── Break ── */
+.overlay-body br {
+  display: block;
+  content: "";
+  margin-top: 0.5rem;
 }
 
 /* Pagination */
@@ -619,7 +846,7 @@
 
   /* Overlay responsive */
   .overlay-header {
-    padding: 3.5rem 1.5rem 1.5rem;
+    padding: nilrem 1.5rem 1.5rem;
   }
   .overlay-title {
     font-size: 1.75rem;
@@ -647,7 +874,7 @@
     font-size: 1.4rem;
   }
   .overlay-header {
-    padding: 3rem 1rem 1rem;
+    padding: nilrem 1rem 1rem;
   }
   .overlay-body {
     padding: 1rem 1rem 2rem;

@@ -26,11 +26,42 @@
         This applies to to whole sentences, applying to every word od the sentence.
         Or Giched texts like this: <glitch intensity="2">abracadabra</glitch>
         and this is heavy glitched <glitch intensity="10"></glitch>
-        The glitch works by fetching fonts from the fonts directory, counting the numbers of letters betwwen the tag(excluding spaces), or if none is given just guesses a random number between 3 and 7 and then replaces the font of every letter with a random font, also while replacing the letter to a random letter. I know, confusing. Also this is controlled by the intensity which has a range of 2 to 10 (could go up but,imma get dizzy). 
+        The glitch works by fetching fonts from the fonts directory, counting the numbers of letters betwwen the tag(excluding spaces), or if none is given just guesses a random number between 3 and 7 and then replaces the font of every letter with a random font, also while replacing the letter to a random letter. I know, confusing. Also this is controlled by the intensity which has a range of 2 to 10 (could go up but,imma get dizzy).
+        <hr/>
+        Here is a <a href="https://github.com/uzair777-dev" target="_blank">link to my GitHub</a> using an anchor tag.
+        <br/>
+        <blockquote>This is a blockquote. It looks cool with the left border.</blockquote>
+        A quick list:
+        <ul>
+          <li>one little sheep</li>
+          <li>two little sheep</li>
+          <li>three little sheep</li>
+        </ul>
+        And some inline <code>code snippet</code> Because why not?
+        <br/>
+        Also heres an image of a cute clippy:
+        <img src="/res/img/clippy.png" alt="Cute clippy"/>
+        <br/>
+         <hr/>
+         <br/>
         Btw Happy Valentine's Day for those who do celebrate it (I don't, I'm single 😭)
       </content>
       <pubDate>
         <date>1771085149</date>
+        <timezone>IST</timezone>
+      </pubDate>
+    </item>
+    <item>
+      <title>Ummm, an AI Agent cant read this</title>
+      <id>2</id>
+      <type></type>
+      <heading>AI agent cant read this blog</heading>
+      <description><![CDATA[Lemme shorten the read for ya if you dont have time, AI agent cant render javascript.]]></description>
+      <content>
+        
+      </content>
+      <pubDate>
+        <date>1771125349</date>
         <timezone>IST</timezone>
       </pubDate>
     </item>

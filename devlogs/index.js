@@ -13,6 +13,7 @@ import { loadXML } from './parser.js';
 let devLogs       = [];
 let currentFilter = 'all';
 let currentPage   = 1;
+let sortOrder     = 'desc'; // 'desc' = newest first, 'asc' = oldest first
 const LOGS_PER_PAGE = 5;
 const glitchFonts   = [];
 
@@ -44,8 +45,8 @@ async function init() {
         // Process custom tags on main thread (needs DOM)
         devLogs = devLogs.map(log => ({ ...log, content: processContent(log.content) }));
 
-        // Build filter bar (only if >1 types)
-        setupFilters();
+        // Build controls (sort + optional filters)
+        setupControls();
 
         // Render
         renderDevLogs();
@@ -84,12 +85,17 @@ async function init() {
 // ═══════════════════════════════════════════════
 
 function processContent(content) {
-    // ── 1. Normalise HTML tags that XML serialisation may mangle ──
-    // XML self-closes void elements: <br/> <hr/> <img .../>
-    content = content.replace(/<br\s*\/>/gi, '<br>');
-    content = content.replace(/<hr\s*\/>/gi, '<hr>');
-    // Fix img self-closing (XML: <img src="..." />) to HTML
-    content = content.replace(/<img\s+([^>]*?)\/>/gi, '<img $1>');
+    // ── 1. Normalise HTML void elements that XML serialises as self-closing ──
+    //
+    // When content is parsed as XML, void HTML elements get serialised
+    // as self-closing tags: <br/>, <hr/>, <img src="x"/>, etc.
+    // Convert them back to proper HTML so the browser renders them correctly.
+    //
+    // Void elements WITH attributes (img, input, source, embed, area, col, track):
+    content = content.replace(/<(img|input|source|embed|area|col|track)\s+([^>]*?)\/>/gi,
+        '<$1 $2>');
+    // Void elements WITHOUT attributes (or optional): br, hr, wbr
+    content = content.replace(/<(br|hr|wbr)\s*\/>/gi, '<$1>');
 
     // ── 2. Custom tag: full censor — replace every character with █ ──
     content = content.replace(/<censor>(.*?)<\/censor>/gi, (_m, p1) =>
@@ -349,20 +355,33 @@ function setupMobileMenu() {
 }
 
 // ═══════════════════════════════════════════════
-//  Filters
+//  Controls (Filters + Sort)
 // ═══════════════════════════════════════════════
 
-function setupFilters() {
-    const types = [...new Set(devLogs.map(l => l.type).filter(Boolean))];
-    if (types.length <= 1) return;
-
+function setupControls() {
     const container = document.getElementById('filter-container');
     container.style.display = 'block';
-    let html = '<div class="devlog-filters"><button class="filter-btn active" data-filter="all">All</button>';
-    types.forEach(t => { html += `<button class="filter-btn" data-filter="${t}">${t}</button>`; });
+
+    let html = '<div class="devlog-controls">';
+
+    // Filter buttons (only if >1 types)
+    const types = [...new Set(devLogs.map(l => l.type).filter(Boolean))];
+    if (types.length > 1) {
+        html += '<div class="devlog-filters">';
+        html += '<button class="filter-btn active" data-filter="all">All</button>';
+        types.forEach(t => { html += `<button class="filter-btn" data-filter="${t}">${t}</button>`; });
+        html += '</div>';
+    }
+
+    // Sort button (always shown)
+    html += `<button class="sort-btn" id="sort-btn" title="Sort by date">
+        Date <span class="sort-arrow">↓</span>
+    </button>`;
+
     html += '</div>';
     container.innerHTML = html;
 
+    // Filter listeners
     container.querySelectorAll('.filter-btn').forEach(btn =>
         btn.addEventListener('click', () => {
             container.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
@@ -372,6 +391,15 @@ function setupFilters() {
             renderDevLogs();
         })
     );
+
+    // Sort listener
+    document.getElementById('sort-btn').addEventListener('click', () => {
+        sortOrder = sortOrder === 'desc' ? 'asc' : 'desc';
+        const btn = document.getElementById('sort-btn');
+        btn.classList.toggle('asc', sortOrder === 'asc');
+        currentPage = 1;
+        renderDevLogs();
+    });
 }
 
 // ═══════════════════════════════════════════════
@@ -384,7 +412,15 @@ function renderDevLogs() {
     list.innerHTML = '';
     pag.innerHTML  = '';
 
-    const filtered   = currentFilter === 'all' ? devLogs : devLogs.filter(l => l.type === currentFilter);
+    let filtered = currentFilter === 'all' ? [...devLogs] : devLogs.filter(l => l.type === currentFilter);
+
+    // Sort by date
+    filtered.sort((a, b) => {
+        const tA = a.pubDate?.date || 0;
+        const tB = b.pubDate?.date || 0;
+        return sortOrder === 'desc' ? tB - tA : tA - tB;
+    });
+
     const totalPages = Math.ceil(filtered.length / LOGS_PER_PAGE);
     const start      = (currentPage - 1) * LOGS_PER_PAGE;
     const page       = filtered.slice(start, start + LOGS_PER_PAGE);
