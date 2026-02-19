@@ -7,6 +7,23 @@
     "My journey in cybersecurity related stuff started during my computer science studies, where I discovered my passion for creating digital experiences that make a difference. Since then, I've worked with various technologies and frameworks, always staying up-to-date with the latest industry trends.",
     "When I'm not coding, you can find me contributing to open-source projects, reading technical blogs, or exploring new technologies. I believe in continuous learning and sharing knowledge with the developer community."
   ],
+  "featured": [
+    {
+      "title": "Flexibility",
+      "description": "Adapting to new challenges and environments, quickly.",
+      "icon": "res/svg/flexible.svg"
+    },
+    {
+      "title": "Learning",
+      "description": "Always eager to learn new things and improve myself.",
+      "icon": "res/svg/brain.svg"
+    },
+    {
+      "title": "Critical and out-of-the-box thinking",
+      "description": "Thinking critically and out-of-the-box to solve problems.",
+      "icon": "res/svg/think.svg"
+    }
+  ],
   "skills": [
     {
       "name": "Python",

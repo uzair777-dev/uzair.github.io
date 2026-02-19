@@ -104,6 +104,75 @@ function updateActiveNavLink(pageName) {
     });
 }
 
+// Fetch and render GitHub repositories from individual URLs
+async function fetchGitHubRepos() {
+    const grid = document.getElementById('repo-grid');
+    if (!grid) return;
+
+    const repoUrls = JSON.parse(grid.dataset.repos || '[]');
+    if (repoUrls.length === 0) return;
+
+    const cacheKey = 'github_repos_' + repoUrls.join(',');
+    const cacheTTL = 5 * 60 * 1000; // 5 minutes
+
+    try {
+        // Check sessionStorage cache first
+        const cached = sessionStorage.getItem(cacheKey);
+        if (cached) {
+            const { data, timestamp } = JSON.parse(cached);
+            if (Date.now() - timestamp < cacheTTL) {
+                renderRepoCards(grid, data);
+                return;
+            }
+        }
+
+        // Parse each URL into owner/repo and fetch individually
+        const fetches = repoUrls.map(url => {
+            const match = url.match(/github\.com\/([^/]+)\/([^/]+)/);
+            if (!match) return Promise.resolve(null);
+            const [, owner, repo] = match;
+            return fetch(`https://api.github.com/repos/${owner}/${repo}`)
+                .then(r => r.ok ? r.json() : null)
+                .catch(() => null);
+        });
+
+        const results = await Promise.all(fetches);
+        const repos = results.filter(Boolean);
+
+        // Cache the result
+        sessionStorage.setItem(cacheKey, JSON.stringify({ data: repos, timestamp: Date.now() }));
+        renderRepoCards(grid, repos);
+    } catch (error) {
+        console.error('Error fetching GitHub repos:', error);
+        grid.innerHTML = `
+            <div style="grid-column:1/-1;text-align:center;">
+                <p class="text-secondary">Unable to load repositories right now.</p>
+                <a href="https://github.com" target="_blank" rel="noopener noreferrer" class="btn" style="margin-top:1rem;display:inline-block;text-decoration:none;">Visit GitHub</a>
+            </div>`;
+    }
+}
+
+// Render repo cards into the grid
+function renderRepoCards(grid, repos) {
+    if (!repos || repos.length === 0) {
+        grid.innerHTML = '<p class="text-secondary" style="text-align:center;grid-column:1/-1;">No repositories found.</p>';
+        return;
+    }
+
+    let html = '';
+    for (const repo of repos) {
+        const ogImage = `https://opengraph.githubassets.com/1/${repo.full_name}`;
+        html += `<a href="${repo.html_url}" target="_blank" rel="noopener noreferrer" class="repo-card">`;
+        html += `<img src="${ogImage}" alt="${repo.name}" class="repo-card-image" loading="lazy">`;
+        html += `<div class="repo-card-body">`;
+        html += `<h4 class="repo-card-name">${repo.name}</h4>`;
+        html += `<p class="repo-card-description">${repo.description || 'No description provided.'}</p>`;
+        html += `</div>`;
+        html += `</a>`;
+    }
+    grid.innerHTML = html;
+}
+
 // Render page content
 async function renderPage(pageData) {
     const mainContent = document.getElementById('main-content');
@@ -133,6 +202,9 @@ async function renderPage(pageData) {
     mainContent.innerHTML = html;
 
     // Setup page-specific interactions
+    if (pageData.type === 'home') {
+        fetchGitHubRepos();
+    }
     if (pageData.type === 'contact') {
         setupContactForm();
     }
@@ -172,23 +244,12 @@ async function renderHomePage(data) {
 
     html += '</section>';
 
-    // Featured skills or projects
-    if (data.featured && data.featured.length > 0) {
+    // Featured GitHub Repositories (dynamic)
+    if (data.github && data.github.repos && data.github.repos.length > 0) {
         html += '<section class="section">';
-        html += '<h2 class="section-title">Featured</h2>';
-        html += '<div class="skills-grid">';
-        for (const item of data.featured) {
-            html += `<div class="skill-item">`;
-            if (item.icon) {
-                const iconContent = await renderSVGIcon(item.icon);
-                html += `<div class="svg-icon">${iconContent}</div>`;
-            }
-            html += `<h4>${item.title}</h4>`;
-            if (item.description) {
-                html += `<p class="text-secondary">${item.description}</p>`;
-            }
-            html += `</div>`;
-        }
+        html += '<h2 class="section-title">Featured Repositories</h2>';
+        html += `<div class="repo-grid" id="repo-grid" data-repos='${JSON.stringify(data.github.repos)}'>`;
+        html += '<p class="text-secondary" style="text-align:center;grid-column:1/-1;">Loading repositories...</p>';
         html += '</div>';
         html += '</section>';
     }
@@ -237,6 +298,25 @@ async function renderAboutPage(data) {
         } else {
             html += `<p class="about-content">${data.content}</p>`;
         }
+    }
+
+    // Featured soft-skills section (relocated from home)
+    if (data.featured && data.featured.length > 0) {
+        html += '<h2 class="skills-heading">What I Bring</h2>';
+        html += '<div class="skills-grid">';
+        for (const item of data.featured) {
+            html += `<div class="skill-item">`;
+            if (item.icon) {
+                const iconContent = await renderSVGIcon(item.icon);
+                html += `<div class="svg-icon">${iconContent}</div>`;
+            }
+            html += `<h4>${item.title}</h4>`;
+            if (item.description) {
+                html += `<p class="text-secondary">${item.description}</p>`;
+            }
+            html += `</div>`;
+        }
+        html += '</div>';
     }
 
     // Skills section

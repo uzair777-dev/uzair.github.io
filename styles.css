@@ -90,6 +90,7 @@ body {
 }
 
 .skill-item, 
+.repo-card,
 .experience-card, 
 .contact-form {
     background: var(--bg-color) !important;
@@ -97,6 +98,7 @@ body {
 }
 
 .skill-item:hover, 
+.repo-card:hover,
 .experience-card:hover {
     box-shadow: var(--shadow-lg) !important;
 }
@@ -373,6 +375,56 @@ h1, h2, h3, h4, h5, h6 {
 .experience-card ul li {
     margin-bottom: 0.5rem;
     color: var(--text-light);
+}
+
+/* Repository Cards */
+.repo-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.repo-card {
+    background: var(--bg-color);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: block;
+    overflow: hidden;
+}
+
+.repo-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.repo-card-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.repo-card-body {
+    padding: 1.25rem;
+}
+
+.repo-card-name {
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.repo-card-description {
+    font-size: 0.9rem;
+    color: var(--text-light);
+    line-height: 1.5;
 }
 
 /* Skills Section */
@@ -742,7 +794,8 @@ h1, h2, h3, h4, h5, h6 {
         padding: 2rem 1rem;
     }
 
-    .skills-grid {
+    .skills-grid,
+    .repo-grid {
         grid-template-columns: 1fr;
     }
 
